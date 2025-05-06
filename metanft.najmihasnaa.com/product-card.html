@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MetaNFT - NFT Marketplace Website ">
+    <meta name="keywords" content="Html, Css, jQuery, JavaScript, MetaNFT, nft, crypto, template, design">
+    <title>MetaNFT - NFT Product Card</title>
+    <link rel="icon" href="images/icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma:wght@400;500;600;700;800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/colors/theme_color_1.css">
+    <style>
+        .product-card {
+            padding: 40px 0;
+        }
+        .nft-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            color: #fff;
+        }
+        .nft-image-container {
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        .nft-image-container img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        .nft-image-container:hover img {
+            transform: scale(1.05);
+        }
+        .product-details {
+            padding: 24px 0;
+        }
+        .nft-title {
+            font-family: 'Michroma', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .nft-description {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+        }
+        .creator-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        .creator-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 16px;
+        }
+        .creator-info span {
+            display: block;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .creator-info h4 {
+            font-size: 16px;
+            margin-top: 4px;
+        }
+        .bid-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .bid-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .current-bid {
+            font-family: 'Michroma', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .bid-ends {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .place-bid-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(124deg,#f95a85,#f70361,#f95420);
+            border-radius: 12px;
+            font-family: 'Michroma', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .place-bid-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 3, 97, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <a href="index.html"><img class="img-fluid" src="images/logo.png" alt=""></a>
+                </div>
+                <nav class="main-nav">
+                    <ul class="menu">
+                        <li class="menu-item menu-item-has-children current">
+                            <a href="#0">Home</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="index.html">Home 1</a></li>
+                                <li class="menu-item current-item"><a href="index-3.html">Home 2</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">About</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="about.html">About</a></li>
+                                <li class="menu-item"><a href="team.html">Our Team</a></li>
+                                <li class="menu-item"><a href="faq.html">Faq</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">NFT</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="shop.html">Our Shop</a></li>
+                                <li class="menu-item"><a href="collection.html">Collections</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <a href="roadmap.html">Road Map</a>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">Blog</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="blog.html">Blog Grid</a></li>
+                                <li class="menu-item"><a href="blog-single.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <a href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+                <a class="header-btn" href="contact.html">join discord</a>
+                <div class="mobile-button"><span></span></div>
+            </div>
+        </div>
+    </header>
+<br>
+<br>    
+
+    <div class="container product-card">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="nft-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="nft-image-container">
+                                <img id="nft-image" src="" alt="NFT Image" class="img-fluid">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="product-details">
+                                <h1 class="nft-title" id="nft-title"></h1>
+                                <p class="nft-description" id="nft-description"></p>
+                                
+                                <div class="creator-section">
+                                    <img src="images/avatars/3.jpg" alt="Creator" class="creator-avatar">
+                                    <div class="creator-info">
+                                        <span>Creator</span>
+                                        <h4>@Yassirart</h4>
+                                    </div>
+                                </div>
+
+                                <div class="bid-section">
+                                    <div class="bid-header">
+                                        <div>
+                                            <span class="bid-ends">Current Bid</span>
+                                            <div class="current-bid">5.4 ETH</div>
+                                        </div>
+                                        <div>
+                                            <span class="bid-ends">Ends in</span>
+                                            <div class="current-bid">23h 50m</div>
+                                        </div>
+                                    </div>
+                                    <button class="place-bid-btn">Place a bid</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
+        // Load NFT details from localStorage when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            const nftData = JSON.parse(localStorage.getItem('nftCard'));
+            
+            if (nftData) {
+                document.getElementById('nft-image').src = nftData.image;
+                document.getElementById('nft-title').textContent = nftData.title;
+                document.getElementById('nft-description').textContent = nftData.description;
+                document.querySelector('.creator-info h4').textContent = nftData.creator;
+                document.querySelector('.creator-avatar').src = nftData.creatorAvatar;
+                document.querySelector('.current-bid').textContent = nftData.currentBid;
+                document.querySelector('.bid-ends + div .current-bid').textContent = nftData.endTime;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Place bid button click handler
+        document.querySelector('.place-bid-btn').addEventListener('click', function() {
+            const currentBid = document.querySelector('.current-bid').textContent;
+            const artworkName = document.getElementById('nft-title').textContent;
+            const creatorName = document.querySelector('.creator-info h4').textContent;
+            const artworkId = 'NFT-' + Math.random().toString(36).substr(2, 9); // Generate a random ID for demo
+            const bidderName = 'User-' + Math.random().toString(36).substr(2, 6); // Mock user ID for demo
+
+            Swal.fire({
+                title: 'Place Your Bid',
+                html: `<p style="color: #666">Current bid is ${currentBid}</p>`,
+                input: 'number',
+                inputAttributes: {
+                    min: parseFloat(currentBid) + 0.1,
+                    step: '0.1'
+                },
+                inputValue: parseFloat(currentBid) + 0.1,
+                showCancelButton: true,
+                confirmButtonText: 'Place Bid',
+                cancelButtonText: 'Cancel',
+                background: '#1a1a1a',
+                color: '#fff',
+                confirmButtonColor: '#f70361',
+                cancelButtonColor: '#333',
+                customClass: {
+                    input: 'swal2-input custom-input'
+                },
+                didOpen: () => {
+                    const input = Swal.getInput();
+                    input.style.backgroundColor = '#333';
+                    input.style.color = '#fff';
+                    input.style.border = '1px solid #444';
+                    input.style.borderRadius = '8px';
+                    input.style.padding = '12px';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const bidAmount = result.value;
+                    const bidDetails = {
+                        artworkId: artworkId,
+                        artworkName: artworkName,
+                        bidAmount: bidAmount,
+                        creatorName: creatorName,
+                        bidderName: bidderName,
+                        timestamp: new Date().toISOString(),
+                        previousBid: currentBid
+                    };
+
+                    // Log bid details (to be sent to backend)
+                    console.log('New Bid Details:', bidDetails);
+
+                    Swal.fire({
+                        title: 'Bid Placed!',
+                        text: `You placed a bid of ${bidAmount} ETH`,
+                        icon: 'success',
+                        background: '#1a1a1a',
+                        color: '#fff',
+                        confirmButtonColor: '#f70361'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

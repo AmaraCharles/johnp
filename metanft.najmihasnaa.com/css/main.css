@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------
-Template Name  : MetaNFT - NFT Marketplace Website Template
+Template Name  : MetaNFT - NFT Marketplace Website 
 Author         : HasnaaDesign
 Version        : 1.0
 Primary Use    : NFT, Marketplace
@@ -29,6 +29,33 @@ Table Of Contents
 /* --------------------------------------
    1. Global Styles
 -----------------------------------------*/
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination button {
+    background: linear-gradient(124deg,#f95a85,#f70361,#f95420);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination button:hover {
+    opacity: 0.8;
+}
+
+.pagination button.active {
+    background: #fff;
+    color: #f70361;
+    border: 1px solid #f70361;
+}
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -1466,10 +1493,46 @@ select:-webkit-autofill:focus {
 
 .discover-nfts {
     padding-top: 120px;
+    padding-bottom: 60px;
 }
 
-.discover-nfts .item:nth-of-type(n+4) .nft-box {
-    margin-top: 30px;
+.discover-nfts .row.grid {
+    margin: 0 -15px;
+}
+
+.discover-nfts .item {
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.discover-nfts .nft-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.discover-nfts .nft-box-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.discover-nfts .nfts-filter {
+    margin-bottom: 40px;
+}
+
+.discover-nfts .nfts-filter .filter-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.discover-nfts .item {
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 33.333%;
 }
 
 .discover-nfts .nfts-filter .filter-wrap .filter button {
@@ -2759,8 +2822,24 @@ select:-webkit-autofill:focus {
         margin-bottom: 10px;
     }
 
-    .discover-nfts .item:nth-of-type(n+2) .nft-box {
+    .discover-nfts .item:nth-of-type(n+4) .nft-box {
         margin-top: 30px;
+    }
+
+    @media (max-width: 767.98px) {
+        .discover-nfts .row.grid {
+            display: block;
+        }
+        .discover-nfts .item {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .discover-nfts .item {
+            width: 50%;
+        }
     }
 
     .discover-nfts .nfts-filter-content {
