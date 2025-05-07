@@ -199,15 +199,15 @@
                                 <div class="bid-section">
                                     <div class="bid-header">
                                         <div>
-                                            <span class="bid-ends">Current Bid</span>
-                                            <div class="current-bid">5.4 ETH</div>
+                                            <span class="bid-ends">Price</span>
+                                            <div class="current-bid"></div>
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <span class="bid-ends">Ends in</span>
                                             <div class="current-bid">23h 50m</div>
-                                        </div>
+                                        </div> -->
                                     </div>
-                                    <button class="place-bid-btn">Place a bid</button>
+                                    <button class="place-bid-btn">Buy</button>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
 
             Swal.fire({
                 title: 'Place Your Bid',
-                html: `<p style="color: #666">Current bid is ${currentBid}</p>`,
+                html: `<p style="color: #666">Current Price is ${currentBid}</p>`,
                 input: 'number',
                 inputAttributes: {
                     min: parseFloat(currentBid) + 0.1,
@@ -293,8 +293,8 @@
                     console.log('New Bid Details:', bidDetails);
 
                     Swal.fire({
-                        title: 'Bid Placed!',
-                        text: `You placed a bid of ${bidAmount} ETH`,
+                        title: 'Artwork Purchased!',
+                        text: `Congratulations!`,
                         icon: 'success',
                         background: '#1a1a1a',
                         color: '#fff',

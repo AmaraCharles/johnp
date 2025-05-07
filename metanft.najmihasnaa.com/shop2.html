@@ -145,10 +145,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="row grid" id="nft-grid">
+				<!-- <div class="row grid" id="nft-grid">
 					
 								
-						    </div>
+						    </div> -->
 							<div class="row grid" id="api-nft-grid">
 					
 								
@@ -160,45 +160,49 @@
 			</div>
 		</section>
         <script>
+            let allNFTs = []; // Store all NFTs globally
+            const ITEMS_PER_PAGE = 6;
+        
             async function fetchNFTs() {
                 try {
-                    console.log('Starting NFT fetch...');
+                    console.log('Fetching NFTs...');
                     const response = await $.ajax({
                         type: 'GET',
                         url: 'https://new-slime.onrender.com/users',
                         dataType: 'json',
                         timeout: 30000
                     });
-                    console.log('API response received:', response);
         
-                    const allArtworks = [];
+                    const artworks = [];
                     response.data.forEach(user => {
-                        if (user.artWorks && user.artWorks.length > 0) {
-                            user.artWorks.forEach(artwork => {
-                                allArtworks.push({
+                        if (user.collections && user.collections.length > 0) {
+                            user.collections.forEach(artwork => {
+                                artworks.push({
                                     title: artwork.title,
                                     image: artwork.imgUrl,
                                     creator: `@${user.username}`,
                                     creatorAvatar: user.profileImage,
-                                    currentBid: `${artwork.price} ETH`,
+                                    currentBid: `${artwork.currentBid} ETH`,
                                     category: artwork.category
                                 });
                             });
                         }
                     });
         
-                    return allArtworks;
+                    allNFTs = artworks; // Cache globally
                 } catch (error) {
                     console.error('Error fetching NFTs:', error);
-                    return [];
+                    allNFTs = []; // Reset to empty on failure
                 }
             }
         
-            async function loadNFTs() {
-                const artworks = await fetchNFTs();
+            function renderNFTs(page = 1) {
+                const startIndex = (page - 1) * ITEMS_PER_PAGE;
+                const endIndex = startIndex + ITEMS_PER_PAGE;
+                const currentNFTs = allNFTs.slice(startIndex, endIndex);
+        
                 const nftGrid = document.getElementById('api-nft-grid');
-                nftGrid.style.minHeight = '800px';
-                nftGrid.innerHTML = artworks.map(nft => `
+                nftGrid.innerHTML = currentNFTs.map(nft => `
                     <div class="col-lg-4 col-md-6 item grid__item ${nft.category}">
                         <div class="nft-box">
                             <div class="nft-box-thumb">
@@ -207,7 +211,7 @@
                                     <a href="#0"><i class="fa fa-heart-o"></i></a>
                                 </div>
                                 <div class="nft-box-btn-content">
-                                    <button class="nft-box-btn" data-nft-title="${nft.title}">Buy <i class="fa fa-arrow-right"></i></button>
+                                    <button class="nft-box-btn" data-nft-title="${nft.title}">Place a bid <i class="fa fa-arrow-right"></i></button>
                                 </div>
                             </div>
                             <div class="nft-box-content">
@@ -243,32 +247,69 @@
                     </div>
                 `).join('');
         
-                // Attach click listeners to "Place a bid" buttons
+                // Bid button click handling
                 document.querySelectorAll('.nft-box-btn').forEach(button => {
                     button.addEventListener('click', () => {
                         const nftTitle = button.dataset.nftTitle;
-                        const nft = artworks.find(n => n.title === nftTitle);
+                        const nft = allNFTs.find(n => n.title === nftTitle);
                         if (nft) {
-                            const nftCard = {
-                                title: nft.title,
-                                creator: nft.creator,
-                                creatorAvatar: nft.creatorAvatar,
-                                currentBid: nft.currentBid,
-                                image: nft.image
-                            };
-                            localStorage.setItem('nftCard', JSON.stringify(nftCard));
-                            window.location.href = 'buy.html';
+                            localStorage.setItem('nftCard', JSON.stringify(nft));
+                            window.location.href = 'product-card.html';
                         }
                     });
                 });
+        
+                renderPagination(page);
             }
         
-            // Initial load
-            $(document).ready(() => {
-                loadNFTs();
+            function renderPagination(currentPage) {
+                const totalPages = Math.ceil(allNFTs.length / ITEMS_PER_PAGE);
+                const containerId = 'pagination-container';
+        
+                // Remove existing pagination
+                let oldPagination = document.getElementById(containerId);
+                if (oldPagination) oldPagination.remove();
+        
+                const pagination = document.createElement('div');
+                pagination.id = containerId;
+                pagination.className = 'pagination';
+                pagination.style.display = 'flex';
+                pagination.style.justifyContent = 'center';
+                pagination.style.gap = '10px';
+                pagination.style.marginTop = '30px';
+        
+                if (currentPage > 1) {
+                    const prev = document.createElement('button');
+                    prev.innerText = 'Previous';
+                    prev.onclick = () => renderNFTs(currentPage - 1);
+                    pagination.appendChild(prev);
+                }
+        
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.innerText = i;
+                    btn.className = i === currentPage ? 'active' : '';
+                    btn.onclick = () => renderNFTs(i);
+                    pagination.appendChild(btn);
+                }
+        
+                if (currentPage < totalPages) {
+                    const next = document.createElement('button');
+                    next.innerText = 'Next';
+                    next.onclick = () => renderNFTs(currentPage + 1);
+                    pagination.appendChild(next);
+                }
+        
+                document.getElementById('api-nft-grid').after(pagination);
+            }
+        
+            // Initial page load
+            $(document).ready(async () => {
+                await fetchNFTs();
+                renderNFTs(1);
             });
         </script>
-        
+                
         
 		<!-- ========== End Discover NFTs ========== -->
 

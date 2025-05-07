@@ -159,117 +159,230 @@
 				</div>
 			</div>
 		</section>
-        <script>
-            async function fetchNFTs() {
-                try {
-                    console.log('Starting NFT fetch...');
-                    const response = await $.ajax({
-                        type: 'GET',
-                        url: 'https://new-slime.onrender.com/users',
-                        dataType: 'json',
-                        timeout: 30000
-                    });
-                    console.log('API response received:', response);
-        
-                    const allArtworks = [];
-                    response.data.forEach(user => {
-                        if (user.artWorks && user.artWorks.length > 0) {
-                            user.artWorks.forEach(artwork => {
-                                allArtworks.push({
-                                    title: artwork.title,
-                                    image: artwork.imgUrl,
-                                    creator: `@${user.username}`,
-                                    creatorAvatar: user.profileImage,
-                                    currentBid: `${artwork.price} ETH`,
-                                    category: artwork.category
-                                });
-                            });
-                        }
-                    });
-        
-                    return allArtworks;
-                } catch (error) {
-                    console.error('Error fetching NFTs:', error);
-                    return [];
-                }
-            }
-        
-            async function loadNFTs() {
-                const artworks = await fetchNFTs();
-                const nftGrid = document.getElementById('api-nft-grid');
-                nftGrid.style.minHeight = '800px';
-                nftGrid.innerHTML = artworks.map(nft => `
-                    <div class="col-lg-4 col-md-6 item grid__item ${nft.category}">
-                        <div class="nft-box">
-                            <div class="nft-box-thumb">
-                                <a href="#0"><img class="img-fluid" src="${nft.image}" alt></a>
-                                <div class="nft-box-popularity">
-                                    <a href="#0"><i class="fa fa-heart-o"></i></a>
-                                </div>
-                                <div class="nft-box-btn-content">
-                                    <button class="nft-box-btn" data-nft-title="${nft.title}">Buy <i class="fa fa-arrow-right"></i></button>
-                                </div>
-                            </div>
-                            <div class="nft-box-content">
-                                <div class="nft-box-title-wrap d-flex align-items-center justify-content-between">
-                                    <h3 class="nft-box-title">
-                                        <a href="#0">${nft.title}</a>
-                                    </h3>
-                                    <div class="nft-box-trending-icon">
-                                        <span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                                <path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/>
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="nft-box-collection d-flex align-items-center justify-content-between">
-                                    <div class="nft-box-user d-flex align-items-center">
-                                        <div class="nft-box-user-thumb">
-                                            <img class="img-fluid" src="${nft.creatorAvatar}" alt="">
-                                        </div>
-                                        <div class="nft-box-user-name">
-                                            <span>Creator</span>
-                                            <h4>${nft.creator}</h4>
-                                        </div>
-                                    </div>
-                                    <div class="nft-box-price">
-                                        <span>Current Bid</span>
-                                        <h4>${nft.currentBid}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-        
-                // Attach click listeners to "Place a bid" buttons
-                document.querySelectorAll('.nft-box-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const nftTitle = button.dataset.nftTitle;
-                        const nft = artworks.find(n => n.title === nftTitle);
-                        if (nft) {
-                            const nftCard = {
-                                title: nft.title,
-                                creator: nft.creator,
-                                creatorAvatar: nft.creatorAvatar,
-                                currentBid: nft.currentBid,
-                                image: nft.image
-                            };
-                            localStorage.setItem('nftCard', JSON.stringify(nftCard));
-                            window.location.href = 'buy.html';
-                        }
-                    });
+<script>
+	async function fetchNFTs(page = 1, limit = 6) {
+    try {
+        console.log('Starting NFT fetch...');
+        const response = await $.ajax({
+            type: 'GET',
+            url: 'https://new-slime.onrender.com/users',
+            dataType: 'json',
+            timeout: 30000
+        });
+        console.log('API response received:', response);
+        const allArtworks = [];
+        response.data.forEach(user => {
+            if (user.collections && user.collections.length > 0) {
+                user.collections.forEach(artwork => {
+                    const nftData = {
+                        title: artwork.title,
+                        image: artwork.imgUrl,
+                        creator: `@${user.username}`,
+                        creatorAvatar: user.profileImage,
+                        currentBid: `${artwork.currentBid} ETH`,
+                        category: artwork.category
+                    };
+                    allArtworks.push(nftData);
                 });
             }
-        
-            // Initial load
-            $(document).ready(() => {
-                loadNFTs();
-            });
-        </script>
-        
-        
+        });
+
+        const totalItems = allArtworks.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const artworks = allArtworks.slice(startIndex, endIndex);
+
+        return {
+            artworks,
+            totalPages,
+            currentPage: page
+        };
+    } catch (error) {
+        console.error('Error fetching NFTs:', error);
+        return {
+            artworks: [],
+            totalPages: 0,
+            currentPage: 1
+        };
+    }
+}
+
+function updatePagination(totalPages, currentPage) {
+    const paginationContainer = document.createElement('div');
+    paginationContainer.className = 'pagination';
+
+    if (currentPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.innerText = 'Previous';
+        prevButton.addEventListener('click', () => {
+            loadPage(currentPage - 1);
+        });
+        paginationContainer.appendChild(prevButton);
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerText = i;
+        if (i === currentPage) {
+            pageButton.className = 'active';
+        }
+        pageButton.addEventListener('click', () => {
+            loadPage(i);
+        });
+        paginationContainer.appendChild(pageButton);
+    }
+
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.innerText = 'Next';
+        nextButton.addEventListener('click', () => {
+            loadPage(currentPage + 1);
+        });
+        paginationContainer.appendChild(nextButton);
+    }
+
+    const paginationContainer = document.createElement('div');
+    paginationContainer.className = 'pagination';
+    paginationContainer.style.display = 'flex';
+    paginationContainer.style.justifyContent = 'center';
+    paginationContainer.style.marginTop = '20px';
+    paginationContainer.style.gap = '10px';
+
+    const existingPagination = document.querySelector('.pagination');
+    if (existingPagination) {
+        existingPagination.replaceWith(paginationContainer);
+    } else {
+        document.getElementById('api-nft-grid').after(paginationContainer);
+    }
+}
+
+async function loadPage(page) {
+    const result = await fetchNFTs(page);
+const artworks = result?.artworks || [];
+const totalPages = result?.totalPages || 0;
+const currentPage = result?.currentPage || 1;
+    const container = document.getElementById('api-nft-grid');
+    container.style.minHeight = '800px';
+    container.innerHTML = artworks.map(nft => `
+        <div class="col-lg-4 col-md-6 item grid__item ${nft.category}">
+            <div class="nft-box">
+                <div class="nft-box-thumb">
+                    <a href="#0"><img class="img-fluid" src="${nft.image}" alt></a>
+                    <div class="nft-box-popularity">
+                        <a href="#0"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                    <div class="nft-box-btn-content">
+                        <button class="nft-box-btn" data-nft-title="${nft.title}">Place a bid <i class="fa fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                <div class="nft-box-content">
+                    <div class="nft-box-title-wrap d-flex align-items-center justify-content-between">
+                        <h3 class="nft-box-title">
+                            <a href="#0">${nft.title}</a>
+                        </h3>
+                        <div class="nft-box-trending-icon">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="nft-box-collection d-flex align-items-center justify-content-between">
+                        <div class="nft-box-user d-flex align-items-center">
+                            <div class="nft-box-user-thumb">
+                                <img class="img-fluid" src="${nft.creatorAvatar}" alt="">
+                            </div>
+                            <div class="nft-box-user-name">
+                                <span>Creator</span>
+                                <h4>${nft.creator}</h4>
+                            </div>
+                        </div>
+                        <div class="nft-box-price">
+                            <span>Current Bid</span>
+                            <h4>${nft.currentBid}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    updatePagination(totalPages, currentPage);
+}
+
+$(document).ready(async function () {
+    await loadPage(1);
+});
+ 
+$(document).ready(async function () {
+const please=	await fetchNFTs()
+console.log({please});
+
+var cunt=document.getElementById("api-nft-grid")
+cunt.innerHTML=please
+cunt.innerHTML = please.map(nft => `
+        <div class="col-lg-4 col-md-6 item grid__item ${nft.category}">
+            <div class="nft-box">
+                <div class="nft-box-thumb">
+                    <a href="#0"><img class="img-fluid" src="${nft.image}" alt></a>
+                    <div class="nft-box-popularity">
+                        <a href="#0"><i class="fa fa-heart-o"></i></a>
+                    </div>
+                    <div class="nft-box-btn-content">
+                        <button class="nft-box-btn" data-nft-title="${nft.title}">Place a bid <i class="fa fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                <div class="nft-box-content">
+                    <div class="nft-box-title-wrap d-flex align-items-center justify-content-between">
+                        <h3 class="nft-box-title">
+                            <a href="#0">${nft.title}</a>
+                        </h3>
+                        <div class="nft-box-trending-icon">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="nft-box-collection d-flex align-items-center justify-content-between">
+                        <div class="nft-box-user d-flex align-items-center">
+                            <div class="nft-box-user-thumb">
+                                <img class="img-fluid" src="${nft.creatorAvatar}" alt="">
+                            </div>
+                            <div class="nft-box-user-name">
+                                <span>Creator</span>
+                                <h4>${nft.creator}</h4>
+                            </div>
+                        </div>
+                        <div class="nft-box-price">
+                            <span>Current Bid</span>
+                            <h4>${nft.currentBid}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    // Add event listeners for bid buttons
+    document.querySelectorAll('.nft-box-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const nftTitle = button.dataset.nftTitle;
+            const nft = please.find(n => n.title === nftTitle);
+            if (nft) {
+                const nftCard = {
+                    title: nft.title,
+                    creator: nft.creator,
+                    creatorAvatar: nft.creatorAvatar,
+                    currentBid: nft.currentBid,
+                    image: nft.image
+                };
+                localStorage.setItem('nftCard', JSON.stringify(nftCard));
+                window.location.href = 'product-card.html';
+            }
+        });
+	});
+})
+</script>
 		<!-- ========== End Discover NFTs ========== -->
 
         <!-- ========== Start Footer ========== -->

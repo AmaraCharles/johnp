@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="MetaNFT - NFT Marketplace Website ">
+    <meta name="description" content="veritart - NFT Marketplace Website ">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <meta name="keywords" content="Html, Css, jQuery, JavaScript, MetaNFT, nft, crypto, template, design">
+    <meta name="keywords" content="Html, Css, jQuery, JavaScript, veritart, nft, crypto, template, design">
     
-    <title>Upload Artwork - MetaNFT</title>
+    <title>Upload Artwork - veritart</title>
     <link rel="icon" href="images/icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
@@ -118,8 +118,9 @@
                         <li class="menu-item menu-item-has-children current">
                             <a href="#">NFT</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a href="shop.html">Our Shop</a></li>
+                              <li class="menu-item"><a href="shop.html">Our Shop</a></li>
                                 <li class="menu-item"><a href="collection.html">Collections</a></li>
+                                <li class="menu-item"><a href="upload.html">Create</a></li>
                             </ul>
                         </li>
                         <li class="menu-item">
@@ -137,7 +138,7 @@
                         </li>
                     </ul>
                 </nav>
-                <a class="header-btn" href="contact.html">join discord</a>
+                	<a class="header-btn" href="login.html">Connect</a>
                 <div class="mobile-button"><span></span></div>
             </div>
         </div>
@@ -167,19 +168,19 @@
                 <form id="createNFTForm">
                     <div class="mb-4">
                         <label class="form-label">Title</label>
-                        <input type="text" class="form-control" name="title" required>
+                        <input type="text" class="form-control" id="title"name="title" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" rows="4" required></textarea>
+                        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Price (ETH)</label>
-                        <input type="number" class="form-control" name="price" step="0.001" required>
+                        <input type="number" class="form-control" id="price"name="price" step="0.001" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Category</label>
-                        <select class="form-control" name="category" required>
+                        <select class="form-control" id="category" required>
                             <option value="art">Art</option>
                             <option value="music">Music</option>
                             <option value="video">Video</option>
@@ -188,16 +189,16 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Royalty (%)</label>
-                        <input type="number" class="form-control" name="royalty" step="0.1" required>
+                        <input type="number" class="form-control" name="royalty" id="royalty"step="0.1" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Create NFT</button>
+                    <button type="button"  id="upload-button" class="btn btn-primary w-100">Create NFT</button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/wow.min.js"></script>
@@ -278,5 +279,196 @@
             });
         });
     </script>
+    <script>
+        const cloudName = 'dsyjlantq';
+      const uploadPreset = 'assetspur'; 
+      const apiKey = '284558829695174'; 
+      const apiSecret = 'MaULadaPC17bgEHAGjBffD0R2qM'; 
+      
+      
+      
+      function storeImg(imgUrl, price,title,description,category,timeStamp,userId,from,royalty) {
+      console.log(imgUrl, price,title,description,category,timeStamp,userId,from,royalty);
+      const createdNft={ imgUrl, price,title,description,category,timeStamp,userId,from,royalty}
+      const created=JSON.stringify(createdNft)
+      localStorage.setItem("created",created)
+      const useId="681a023092d35c69c843818a"
+      $.ajax({
+        type: 'POST',
+        url: `https://new-slime.onrender.com/transactions/${useId}/single`,
+        dataType: 'json',
+        data: {imgUrl, price,title,description,category,timeStamp,userId,from,royalty},
+        timeout: 30000,
+        success: function (data) {
+          console.log(data);
+          $('.live-section').html('Picture was successfully uploaded').addClass('');
+          setTimeout(function(){
+                                      
+            swal({
+                                     title: "Upload Successful",
+                                     text: "Your Artwork was uploaded successfully",
+                                     type:"success",
+                                     timer:3000,
+                                    })
+                            
+                                        
+                                               
+                                  //  setTimeout(scream,4000)
+                                   }, 7000);
+              setTimeout(function () {
+            location.href="author.html";
+          }, 8000);
+        },
+        error: function (xhr, status, error) {
+          
+          console.log(error);
+          $('.live-section').html('Error uploading image').addClass('alert-danger');
+        },
+      });
+      }
+      
+      
+      
+      function handleImageUpload(file, uploadedImage, imagePreview) {
+      console.log(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      
+    
+      
+      fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        // headers: {
+        //   'Authorization': `Basic ${btoa(`${apiKey}:${apiSecret}`)}`,
+        // },
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          const imgUrl = data.secure_url;
+          localStorage.setItem("imgUrl",imgUrl)
+          var userFromLS=localStorage.getItem("user")
+          var parsedData=JSON.parse(userFromLS)
+          const userId=parsedData._id
+          const from=parsedData.email
+          const price=document.getElementById("price").value
+          const title=document.getElementById("title").value
+          const category=document.getElementById("category").value
+          const description=document.getElementById("description").value
+          const royalty=document.getElementById("royalty").value
+         
+          const timeStamp=new Date()
+        
+      console.log(imgUrl,
+            price ,
+            title,
+            description,timeStamp,from,royalty);
+          // Call the function to store the image URL in MongoDB
+         
+    // var user=JSON.parse(userFromLS)
+    
+    
+    
+    
+      storeImg( imgUrl,price ,title,description,category,timeStamp,from,userId,royalty)
+      
+        })
+        .catch(error => {
+          console.error('Image upload failed:', error);
+          $("#upload-button").html("Create NFT")
+        });
+      }
+      
+      
+      
+      function setupImageUpload(imageUpload, uploadedImage) {
+     
+      
+      if (imageUpload.files && imageUpload.files[0]) {
+        // Access the selected file
+        var file = imageUpload.files[0];
+        handleImageUpload(file, uploadedImage);
+        // Log the file details (you can perform further actions here)
+        // alert('Selected File:', file);
+      }
+      
+      }
+      
+      
+      
+      
+      
+      
+      // Setup for the first image upload
+      const imageUpload = document.getElementById('artworkUpload');
+      const uploadButton = document.getElementById('upload-button');
+    
+      const uploadedImage = document.getElementById('previewImage');
+      setupImageUpload(imageUpload, uploadedImage);
+      
+      function scream(){
+      
+      location.href='dashboard.html'
+      
+      
+      }
+      
+      
+        $('#upload-button').click(async function (event) {
+      
+          event.preventDefault();
+          function release({firstName}){
+      
+      $.ajax({
+        type: 'POST',
+        url: 'https://new-slime.onrender.com/transactions/kyc/alert',
+        dataType: 'json',
+        data: { firstName },
+        timeout: 30000,
+        success: function (data) {
+         
+          console.log(data);
+        
+        },
+        error: function (xhr, status, error) {
+         
+          console.log(error);
+          $('.live-section').html('Error uploading image').addClass('alert-danger');
+        },
+      });
+      }
+      
+      
+      var name=localStorage.getItem("user")
+      var parsename=JSON.parse(name)
+      var firstName=name.firstName;
+       
+
+    $('#upload-button').val("Loading...")
+    
+  setupImageUpload(imageUpload, uploadedImage)
+  
+       
+       
+        release({firstName})
+      
+  
+          
+          
+      
+      
+      
+        
+                        
+     
+          
+        })
+      
+      
+      
+         
+      </script>
+    
 </body>
 </html>
