@@ -10,20 +10,24 @@ async function fetchNFTs() {
         console.log('API response received:', response);
         const artworks = [];
         response.data.forEach(user => {
-            if (user.collections && user.collections.length > 0) {
-                console.log('Processing user collections:', user.collections);
+            if (user.artWorks && user.artWorks.length > 0) {
+                console.log('Processing user artWorks:', user.artWorks);
                 
-                user.collections.forEach(artwork => {
+                user.artWorks.forEach(artwork => {
+                    if (artwork.status==="listed"){
                     const nftData = {
                         title: artwork.title,
-                        image: artwork.imgUrl,
+                        image: artwork.image,
                         creator: `@${user.username}`,
                         creatorAvatar: user.profileImage,
-                        currentBid: `${artwork.currentBid} ETH`,
-                        category: artwork.category
+                        currentBid: `${artwork.price} ETH`,
+                        category: artwork.category,
+                        status:artwork.status,
+                        _id:artwork._id
                     };
                     console.log('Adding NFT:', nftData);
                     artworks.push(nftData);
+                };
                 });
             }
         });
@@ -80,7 +84,8 @@ let shopNFTs = [
         creator: "@Sinanart",
         creatorAvatar: "images/avatars/2.jpg",
         currentBid: "4.07 ETH",
-        category: "video"
+        category: "video",
+        status:"listed"
     },
     {
         title: "Purple Leaf",
@@ -88,7 +93,8 @@ let shopNFTs = [
         creator: "@Yassirart",
         creatorAvatar: "images/avatars/3.jpg",
         currentBid: "1.00 ETH",
-        category: "art"
+        category: "art",
+        status:"listed"
     },
     {
         title: "Women Portrait",
@@ -96,7 +102,8 @@ let shopNFTs = [
         creator: "@studioart",
         creatorAvatar: "images/avatars/4.jpg",
         currentBid: "3.09 ETH",
-        category: "art"
+        category: "art",
+        status:"listed"
     },
     {
         title: "Berries Art",
@@ -104,7 +111,8 @@ let shopNFTs = [
         creator: "@Yomnaart",
         creatorAvatar: "images/avatars/1.jpg",
         currentBid: "2.04 ETH",
-        category: "sport"
+        category: "sport",
+        status:"listed"
     },
     {
         title: "3D Model",
@@ -112,7 +120,8 @@ let shopNFTs = [
         creator: "@Yaraartist",
         creatorAvatar: "images/avatars/6.jpg",
         currentBid: "7.12 ETH",
-        category: "game"
+        category: "game",
+        status:"listed"
     },
     {
         title: "Colorful Leaf",
@@ -120,7 +129,8 @@ let shopNFTs = [
         creator: "@dreamart",
         creatorAvatar: "images/avatars/7.jpg",
         currentBid: "5.07 ETH",
-        category: "music"
+        category: "music",
+        status:"listed"
     },
     {
         title: "Colorful Paint",
@@ -128,7 +138,8 @@ let shopNFTs = [
         creator: "@Leilaart",
         creatorAvatar: "images/avatars/14.jpg",
         currentBid: "4.07 ETH",
-        category: "game"
+        category: "game",
+        status:"listed"
     },
     {
         title: "Multicolor Illustration",
@@ -136,7 +147,8 @@ let shopNFTs = [
         creator: "@Simayart",
         creatorAvatar: "images/avatars/8.jpg",
         currentBid: "2.47 ETH",
-        category: "music"
+        category: "music",
+        status:"listed"
     },
     {
         title: "Creative Model",
@@ -144,7 +156,8 @@ let shopNFTs = [
         creator: "@Sinanart",
         creatorAvatar: "images/avatars/2.jpg",
         currentBid: "4.47 ETH",
-        category: "game"
+        category: "game",
+        status:"listed"
     },
     {
         title: "Spiral Illustration",
@@ -152,7 +165,8 @@ let shopNFTs = [
         creator: "@Yassirart",
         creatorAvatar: "images/avatars/3.jpg",
         currentBid: "5.46 ETH",
-        category: "game"
+        category: "game",
+        status:"listed"
     },
     {
         title: "Render Art",
@@ -160,7 +174,8 @@ let shopNFTs = [
         creator: "@studioart",
         creatorAvatar: "images/avatars/4.jpg",
         currentBid: "2.12 ETH",
-        category: "sport"
+        category: "sport",
+        status:"listed"
     },
     {
         title: "Digital Art",
@@ -168,7 +183,8 @@ let shopNFTs = [
         creator: "@Leilaart",
         creatorAvatar: "images/avatars/14.jpg",
         currentBid: "4.47 ETH",
-        category: "sport"
+        category: "sport",
+        status:"listed"
     }
 ];
 

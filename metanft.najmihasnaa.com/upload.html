@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/colors/theme_color_1.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         .upload-container {
@@ -292,10 +293,12 @@
       const createdNft={ imgUrl, price,title,description,category,timeStamp,userId,from,royalty}
       const created=JSON.stringify(createdNft)
       localStorage.setItem("created",created)
-      const useId="681a023092d35c69c843818a"
+     const userWare=localStorage.getItem("thisuser")
+     console.log(userWare);
+     
       $.ajax({
         type: 'POST',
-        url: `https://new-slime.onrender.com/transactions/${useId}/single`,
+        url: `https://new-slime.onrender.com/transactions/${userWare}/single`,
         dataType: 'json',
         data: {imgUrl, price,title,description,category,timeStamp,userId,from,royalty},
         timeout: 30000,
@@ -350,6 +353,7 @@
           localStorage.setItem("imgUrl",imgUrl)
           var userFromLS=localStorage.getItem("user")
           var parsedData=JSON.parse(userFromLS)
+          localStorage.setItem("thisuser",parsedData._id)
           const userId=parsedData._id
           const from=parsedData.email
           const price=document.getElementById("price").value

@@ -20,6 +20,7 @@ const trendingNFTs = [
         creatorAvatar: "images/avatars/3.jpg",
         currentBid: "1.00 ETH"
     }
+    // Add more items if needed
 ];
 
 function shuffleArray(array) {
@@ -30,53 +31,38 @@ function shuffleArray(array) {
     return array;
 }
 
-function renderTrendingNFTs() {
-    const container = document.querySelector('.trending-auctions .row:nth-child(2)');
+function renderNFTCarousel() {
+    const container = document.querySelector('#artworksCarousel .carousel-inner');
     if (!container) return;
 
     const shuffledNFTs = shuffleArray([...trendingNFTs]);
-    container.innerHTML = shuffledNFTs.map(nft => `
-        <div class="col-lg-4 col-md-6 item">
-            <div class="nft-box">
-                <div class="nft-box-thumb">
-                    <a href="#0"><img class="img-fluid" src="${nft.image}" alt></a>
-                    <div class="nft-box-popularity">
-                        <a href="#0"><i class="fa fa-heart-o"></i></a>
-                    </div>
-                    <div class="nft-box-btn-content">
-                        <a href="#0" class="nft-box-btn">Place a bid <i class="fa fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="nft-box-content">
-                    <div class="nft-box-title-wrap d-flex align-items-center justify-content-between">
-                        <h3 class="nft-box-title">
-                            <a href="#0">${nft.title}</a>
-                        </h3>
-                        <div class="nft-box-trending-icon">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M311.9 260.8L160 353.6 8 260.8 160 0l151.9 260.8zM160 383.4L8 290.6 160 512l152-221.4-152 92.8z"/></svg>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="nft-box-collection d-flex align-items-center justify-content-between">
-                        <div class="nft-box-user d-flex align-items-center">
-                            <div class="nft-box-user-thumb">
-                                <img class="img-fluid" src="${nft.creatorAvatar}" alt="">
-                            </div>
-                            <div class="nft-box-user-name">
-                                <span>Creator</span>
-                                <h4>${nft.creator}</h4>
+    const chunkSize = 3;
+    let carouselContent = '';
+
+    for (let i = 0; i < shuffledNFTs.length; i += chunkSize) {
+        const chunk = shuffledNFTs.slice(i, i + chunkSize);
+        const isActive = i === 0 ? 'active' : '';
+        carouselContent += `
+            <div class="carousel-item ${isActive}">
+                <div class="row">
+                    ${chunk.map(nft => `
+                        <div class="col-md-4">
+                            <div class="artwork-card">
+                                <img src="${nft.image}" class="img-fluid" alt="${nft.title}">
+                                <div class="artwork-info">
+                                    <h4>${nft.title}</h4>
+                                    <p class="artist">by ${nft.creator}</p>
+                                    <div class="price">${nft.currentBid}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="nft-box-price">
-                            <span>Current Bid</span>
-                            <h4>${nft.currentBid}</h4>
-                        </div>
-                    </div>
+                    `).join('')}
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }
+
+    container.innerHTML = carouselContent;
 }
 
-document.addEventListener('DOMContentLoaded', renderTrendingNFTs);
+document.addEventListener('DOMContentLoaded', renderNFTCarousel);

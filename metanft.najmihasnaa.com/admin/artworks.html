@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artworks Management - NFT Admin</title>
+    <title>User Management - NFT Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
             --primary-color: #7367f0;
@@ -55,57 +53,77 @@
             transition: all 0.3s ease;
         }
 
-        .artwork-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
+        .table {
+            background: white;
+            border-radius: 0.5rem;
         }
 
-        .artwork-card {
-            position: relative;
-            overflow: hidden;
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
         }
 
-        .artwork-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 0.5rem 0.5rem 0 0;
+        .btn-primary:hover {
+            background: #5e50ee;
         }
 
-        .artwork-card .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
+        .user-stats {
+            background: linear-gradient(118deg,var(--primary-color),var(--primary-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Ensures that the table will scroll horizontally if needed */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            min-width: 800px;
+        }
+
+        /* Responsive Design for Pagination */
+        .pagination {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            gap: 0.5rem;
         }
 
-        .artwork-card:hover .overlay {
-            opacity: 1;
+        .pagination button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.3rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
         }
 
-        .filter-section {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 2rem;
+        .pagination button:hover {
+            background-color: #5e50ee;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .pagination select {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: 0.3rem;
+            background-color: #fff;
+            border: 1px solid #ddd;
         }
 
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease forwards;
+        @media (max-width: 767px) {
+            .pagination {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pagination button,
+            .pagination select {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -116,250 +134,202 @@
             <div class="col-md-3 col-lg-2 px-0 sidebar">
                 <h4 class="text-white mb-4">NFT Admin</h4>
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="dashboard.html">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link active" href="#">
-                        <i class="fas fa-images me-2"></i> Artworks
-                    </a>
-                    <a class="nav-link" href="collections.html">
-                        <i class="fas fa-layer-group me-2"></i> Collections
-                    </a>
-                    <a class="nav-link" href="users.html">
-                        <i class="fas fa-users me-2"></i> Users
-                    </a>
-                    <a class="nav-link" href="messages.html">
-                        <i class="fas fa-envelope me-2"></i> Messages
-                    </a>
-                    <a class="nav-link" href="transactions.html">
-                        <i class="fas fa-exchange-alt me-2"></i> Transactions
-                    </a>
+                    <a class="nav-link" href="#">Dashboard</a>
+                    <a class="nav-link" href="#">Artworks</a>
+                    <a class="nav-link " href="#">Users</a>
+                    <a class="nav-link" href="#">Messages</a>
+                    <a class="nav-link" href="#">Transactions</a>
                 </nav>
             </div>
-
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Artworks Management</h2>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadArtworkModal">
-                        <i class="fas fa-plus me-2"></i>Upload New Artwork
-                    </button>
-                </div>
-
-                <!-- Artworks Owner List -->
-                <div class="list-group mb-4" id="artworksOwnerList">
-                    <!-- Owners will be dynamically added here -->
-                </div>
-
-                <!-- Artworks Grid -->
-                <div class="artwork-grid" id="artworksGrid">
-                    <!-- Artwork cards will be dynamically added here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Artwork Modal -->
-    <div class="modal fade" id="uploadArtworkModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload New Artwork</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="uploadArtworkForm">
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input type="text" class="form-control" name="title" required>
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Artworks Management</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>From</th>
+                                        <th>Title</th>
+                                        <th>Collection</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        <th>Action</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                    <!-- Dynamic Rows will be inserted here -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Price (ETH)</label>
-                            <input type="number" class="form-control" name="price" step="0.01" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Artwork File</label>
-                            <input type="file" class="form-control" name="artwork" accept="image/*" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="uploadArtworkForm" class="btn btn-primary">Upload</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Edit Artwork Modal -->
-    <div class="modal fade" id="editArtworkModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Artwork</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editArtworkForm">
-                        <input type="hidden" name="artworkId" id="editArtworkId">
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input type="text" class="form-control" name="title" id="editTitle" required>
+                        <!-- Pagination Controls -->
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="mb-2">
+                                <label for="pageSize">Users per page:</label>
+                                <select id="pageSize" class="form-select" style="width: 150px;">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                            <div id="paginationControls" class="pagination"></div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" id="editDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Price (ETH)</label>
-                            <input type="number" class="form-control" name="price" id="editPrice" step="0.01" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="editArtworkForm" class="btn btn-primary">Save Changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let artworks = [];
-
-        async function fetchUser() {
-      const response = await $.ajax({
-        type: "GET",
-        url: 'https://new-slime.onrender.com/users',
-        dataType: "json",
-        timeout: 30000,
-      });
-
-      console.log(response.data);
-      return response.data
-    }
-
-   
-function renderArtworksOwnerList(owners) {
-    const list = document.getElementById('artworksOwnerList');
-    list.innerHTML = owners.map(owner => `
-        <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#owner-${owner.id}" aria-expanded="false">
-            ${owner.name} <span class="badge bg-primary">${owner.artworks.length}</span>
-        </a>
-        <div class="collapse" id="owner-${owner.id}">
-            <div class="list-group">
-                ${owner.artworks.map(artwork => `
-                    <div class="list-group-item">
-                        ${artwork.title}
-                        <button class="btn btn-sm btn-primary float-end" onclick="openEditModal('${artwork.id}')">View</button>
                     </div>
-                `).join('')}
+                </div>
             </div>
         </div>
-    `).join('');
-}
+    </div>
 
-async function fetchArtworks() {
-    const users = await fetchUser();
-    try {
-        artworks = users;
-        const owners = artworks.reduce((acc, artwork) => {
-            const owner = acc.find(o => o.id === artwork.ownerId);
-            if (owner) {
-                owner.artworks.push(artwork);
-            } else {
-                acc.push({ id: artwork.ownerId, name: artwork.ownerName, artworks: [artwork] });
-            }
-            return acc;
-        }, []);
-        renderArtworksOwnerList(owners);
-        renderArtworks(artworks);
-    } catch (error) {
-        console.error('Error fetching artworks:', error);
-    }
-}
-
-
-
-            
-// function renderArtworks(artworksToRender) {
-//     const grid = document.getElementById('artworksGrid');
-//     grid.innerHTML = artworksToRender.map(artwork => `
-//         <div class="card artwork-card animate-fade-in">
-//             <img src="${artwork.image}" alt="${artwork.title}">
-//             <div class="card-body">
-//                 <h5 class="card-title">${artwork.title}</h5>
-//                 <p class="card-text">${artwork.price} ETH</p>
-//                 <span class="badge bg-${artwork.status === 'sold' ? 'success' : 'primary'}">
-//                     ${artwork.status}
-//                 </span>
-//             </div>
-//             <div class="overlay">
-//                 <button class="btn btn-primary btn-sm" onclick="openEditModal('${artwork.id}')">
-//                     <i class="fas fa-edit"></i> Edit
-//                 </button>
-//                 <button class="btn btn-danger btn-sm" onclick="deleteArtwork('${artwork.id}')">
-//                     <i class="fas fa-trash"></i> Delete
-//                 </button>
-//             </div>
-//         </div>
-//     `).join('');
-// }
-
-
-        // Apply filters
-        function applyFilters() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const status = document.getElementById('statusFilter').value;
-            const sortBy = document.getElementById('sortBy').value;
-
-            let filtered = artworks.filter(artwork => {
-                const matchesSearch = artwork.title.toLowerCase().includes(searchTerm);
-                const matchesStatus = status ? artwork.status === status : true;
-                return matchesSearch && matchesStatus;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        // Fetch users from the server
+        async function fetchUsers(page = 1, limit = 10) {
+            const response = await $.ajax({
+                type: "GET",
+                url: 'https://new-slime.onrender.com/users',
+                data: { page, limit },
+                dataType: "json",
+                timeout: 30000,
             });
+            return response.data;
+        }
+    
+        // Store user email in localStorage and navigate to the user info page
+        function sendUserDetail(userEmail) {
+            localStorage.setItem("userem", userEmail);
+            location.href = "userinfo.html";
+        }
+    
+        // Navigate to the art info page
+        function viewArt(details) {
+            localStorage.setItem("wish", details);
+            location.href = "artinfo.html";
+        }
+    
+        // Handle transaction details and confirm purchase
+        async function sendTransactionDetail(details) {
 
-            // Sort artworks
-            filtered.sort((a, b) => {
-                switch(sortBy) {
-                    case 'newest':
-                        return new Date(b.createdAt) - new Date(a.createdAt);
-                    case 'oldest':
-                        return new Date(a.createdAt) - new Date(b.createdAt);
-                    case 'price-high':
-                        return b.price - a.price;
-                    case 'price-low':
-                        return a.price - b.price;
-                    default:
-                        return 0;
+            _id=details[0]+details[1]+details[2]+details[3]+details[4]+details[5]+details[6]+details[7]+details[8]+details[9]+details[10]+details[11]+details[12]+details[13]+details[14]+details[15]+details[16]+details[17]+details[18]+details[19]+details[20]+details[21]+details[22]+details[23];
+
+
+ transactionId=details[25]+details[26]+details[27]+details[28]+details[29]+details[30]+details[31]+details[32]+details[33]+details[34]+details[35]+details[36]+details[37]+details[38]+details[39]+details[40]+details[41]+details[42]+details[43]+details[44]+details[45]+details[46]+details[47]+details[48]+details[49]+details[50]+details[51]+details[52]+details[53]+details[54]+details[55]+details[56]+details[57]+details[58]+details[59]+details[60];
+
+var send=[transactionId,_id]
+
+
+            const response = await $.ajax({
+                type: "PUT",
+                url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
+                dataType: "json",
+                data: { _id, transactionId },
+                timeout: 30000,
+                success: function () {
+                    $('.live-section').addClass("alert-primary").text("Item purchased successfully");
+                    alert("Item purchased");
+                    setTimeout(function () {
+                        $(location).prop('href', './depositshistory.html');
+                    }, 2000);
                 }
             });
-
-            renderArtworks(filtered);
+            return response.data;
         }
+    
+        // Handle decline user transaction request
+        async function declineTransaction(details) {
+            const [userId, transactionId] = details;
+            const response = await $.ajax({
+                type: "PUT",
+                url: `https://new-slime.onrender.com/transactions/${userId}/transactions/${transactionId}/decline`,
+                dataType: "json",
+                data: { userId, transactionId },
+                timeout: 30000,
+                success: function () {
+                    $('.live-section').addClass("alert-primary").text("Item Declined");
+                    alert("Item Declined");
+                    setTimeout(function () {
+                        $(location).prop('href', './depositshistory.html');
+                    }, 2000);
+                }
+            });
+            return response.data;
+        }
+    
+        // Render the user data into the table
+        async function renderUsers(page = 1) {
+            const limit = 10;
+            const users = await fetchUsers(page, limit);
+            const tbl = $('.table-body');
+            tbl.empty();  // Clear existing data before appending
+    
+            users.forEach(function (user) {
+                const transactions = user.collections;
+                const artworks = user.artWorks;
+    
+                // Render artworks data
+                artworks.forEach(function (art) {
+                    console.log(art);
+                    
+                    const details = [user._id, art._id];
+                    const row = $('<tr>').appendTo(tbl);
+                    $('<td>').text(art.creator).appendTo(row);
+                    $('<td>').text(art.title).appendTo(row);
+                    $('<td>').text("none").appendTo(row);
+                    $('<td>').text(art.category).appendTo(row);
+                    $('<td>').text(art.status).appendTo(row);
+                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="sendTransactionDetail(\'' + details + '\')" id="approve">Buy</a></td>').appendTo(row);
+                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="viewArt(\'' + details + '\')" id="decline">View Art</a></td>').appendTo(row);
+                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="sendUserDetail(\'' + user.email + '\')">User Info</a></td>').appendTo(row);
+                });
+    
+                // Render transactions data
+                transactions.forEach(function (transaction) {
+                    const details = [user._id, transaction._id];
+                    const row = $('<tr>').appendTo(tbl);
+                    $('<td>').text(transaction.from).appendTo(row);
+                    $('<td>').text(transaction.title).appendTo(row);
+                    $('<td>').text(transaction.collection).appendTo(row);
+                    $('<td>').text(transaction.category).appendTo(row);
+                    $('<td>').text(transaction.status).appendTo(row);
+                   // Buy Button
+    const buyButton = $('<td><a class="btn btn-primary btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="sendTransactionDetail(' + JSON.stringify(details) + ')" id="approve">Buy</a></td>');
+    buyButton.appendTo(row);
 
-        
+    // View Art Button
+    const viewButton = $('<td><a class="btn btn-secondary btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="viewArt(' + JSON.stringify(details) + ')" id="decline">View Art</a></td>');
+    viewButton.appendTo(row);
 
-       
-
-        
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchArtworks();
+    // User Info Button
+    const userInfoButton = $('<td><a class="btn btn-info btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="sendUserDetail(\'' + user.email + '\')">User Info</a></td>');
+    userInfoButton.appendTo(row);
+                });
+            });
+    
+            // Pagination
+            const pagination = $('.pagination');
+            pagination.empty();  // Clear existing pagination
+    
+            // Pagination buttons
+            const totalPages = 5; // You can update this based on the actual total pages
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = $('<li class="page-item">').appendTo(pagination);
+                const pageLink = $('<a class="page-link" href="#">' + i + '</a>').appendTo(pageItem);
+    
+                pageLink.click(function (e) {
+                    e.preventDefault();
+                    renderUsers(i);  // Load the next page of users
+                });
+            }
+        }
+    
+        $(document).ready(function () {
+            renderUsers();  // Initial render
         });
     </script>
-<div class="gtranslate_wrapper"></div>
-<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
-<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
-</body>ass="gtranslate_wrapper"></div>
-<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
-<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+    
 </body>
 </html>
-<script>
-</script>

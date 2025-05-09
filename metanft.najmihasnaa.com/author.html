@@ -18,6 +18,46 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
+        .profile-menu {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .profile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .profile-menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1a1a1a;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .profile-menu-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .profile-menu-content a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .profile-menu:hover .profile-menu-content {
+            display: block;
+        }
+
         .author-profile {
             padding: 40px 15px;
         }
@@ -277,6 +317,14 @@
                 </nav>
                 	<a class="header-btn" href="register.html">Connect</a>
                 <div class="mobile-button"><span></span></div>
+                <div class="profile-menu">
+                    <button class="profile-menu-btn"><i class="fa fa-user"></i></button>
+                    <div class="profile-menu-content">
+                        <a href="#" onclick="openChangePassword()">Change Password</a>
+                        <a href="#" onclick="openEditProfile()">Edit Profile</a>
+                        <a href="#" onclick="logout()">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>

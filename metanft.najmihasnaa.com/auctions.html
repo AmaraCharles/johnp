@@ -179,6 +179,7 @@
                         if (user.artWorks && user.artWorks.length > 0) {
                             user.artWorks.forEach(artwork => {
                                 allArtworks.push({
+                                    _id:artwork._id,
                                     title: artwork.title,
                                     image: artwork.imgUrl,
                                     creator: `@${user.username}`,
@@ -257,7 +258,8 @@
                                 creator: nft.creator,
                                 creatorAvatar: nft.creatorAvatar,
                                 currentBid: nft.currentBid,
-                                image: nft.image
+                                image: nft.image,
+                                _id:nft._id
                             };
                             localStorage.setItem('nftCard', JSON.stringify(nftCard));
                             window.location.href = 'product-card.html';

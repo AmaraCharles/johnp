@@ -214,7 +214,42 @@
                                             </tr>
                                         </thead>
                                         <tbody id="recentTransactions">
-                                            <!-- Transaction rows will be dynamically added here -->
+<script>
+$(document).ready(async function() {
+  const users = await fetchUser();
+  const transactionRows = $('#recentTransactions');
+
+  users.forEach(user => {
+    // Display artwork transactions
+    user.artWorks.forEach(art => {
+      const row = $('<tr>');
+      row.append(`
+        <td>${art._id}</td>
+        <td>${art.title}</td>
+        <td>${art.from}</td>
+        <td>${art.price} ETH</td>
+        <td>${new Date(art.createdAt).toLocaleDateString()}</td>
+        <td><span class="badge ${art.status === 'Sold' ? 'bg-success' : 'bg-warning'}">${art.status}</span></td>
+      `);
+      transactionRows.append(row);
+    });
+
+    // Display collection transactions 
+    user.collections.forEach(collection => {
+      const row = $('<tr>');
+      row.append(`
+        <td>${collection._id}</td>
+        <td>${collection.title}</td>
+        <td>${collection.from}</td>
+        <td>${collection.price} ETH</td>
+        <td>${new Date(collection.createdAt).toLocaleDateString()}</td>
+        <td><span class="badge ${collection.status === 'Sold' ? 'bg-success' : 'bg-warning'}">${collection.status}</span></td>
+      `);
+      transactionRows.append(row);
+    });
+  });
+});
+</script>
                                         </tbody>
                                     </table>
                                 </div>

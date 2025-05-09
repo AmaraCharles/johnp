@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - NFT Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #7367f0;
+            --secondary-color: #82868b;
+            --success-color: #28c76f;
+            --info-color: #00cfe8;
+            --warning-color: #ff9f43;
+            --danger-color: #ea5455;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        .sidebar {
+            background: #283046;
+            min-height: 100vh;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link {
+            color: #d0d2d6;
+            padding: 0.8rem 1rem;
+            margin: 0.2rem 0;
+            border-radius: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 24px 0 rgba(34,41,47,.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .user-stats {
+            background: linear-gradient(118deg,var(--primary-color),var(--primary-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #5e50ee;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #ea2f5d;
+        }
+
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+        }
+
+        /* PlutonStyle Specific Styles */
+        .user-card-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .user-card-content {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+
+        @media (max-width: 767px) {
+            body {
+                margin-left: 0;
+            }
+
+            .sidenav {
+                width: 100%;
+                position: relative;
+            }
+
+            .navbar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+        }
+        /* .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 24px 0 rgba(34,41,47,.1);
+            transition: all 0.3s ease;
+        } */
+
+        .table {
+            background: white;
+            border-radius: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #5e50ee;
+        }
+
+        .user-stats {
+            background: linear-gradient(118deg,var(--primary-color),var(--primary-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Ensures that the table will scroll horizontally if needed */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            min-width: 800px;
+        }
+
+        /* Responsive Design for Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.3rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .pagination button:hover {
+            background-color: #5e50ee;
+        }
+
+        .pagination select {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: 0.3rem;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 767px) {
+            .pagination {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pagination button,
+            .pagination select {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 sidebar">
+                <h4 class="text-white mb-4">NFT Admin</h4>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="#">Dashboard</a>
+                    <a class="nav-link" href="#">Artworks</a>
+                    <a class="nav-link" href="#">Users</a>
+                    <a class="nav-link" href="#">Messages</a>
+                    <a class="nav-link" href="#">Transactions</a>
+                </nav>
+            </div>
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="row justify-content-center">
+                    <!-- User Info Card -->
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="user-card-header">
+                                <h3>User Information</h3>
+                            </div>
+                            <div class="user-card-content">
+                                <form id="userForm">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" disabled>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" disabled>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="balance" class="form-label">Fund Balance</label>
+                                        <input type="text" class="form-control" id="balance" disabled>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="balance" class="form-label">Spot Balance</label>
+                                        <input type="text" class="form-control" id="profit" disabled>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="condition" class="form-label">Status</label>
+                                        <input type="text" class="form-control" id="condition" disabled>
+                                    </div>
+        
+                                    <div class="action-buttons">
+                                        <button type="button" id="updateBtn" class="btn btn-primary">Save</button>
+                                        <button type="button" id="enableBtn" class="btn btn-success">Enable</button>
+                                        <button type="button" id="disableBtn" class="btn btn-danger">Disable</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Login Button Section -->
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-8">
+                        <button id="loginBtn" class="btn btn-primary w-100 btn-lg">Login User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Define the currentUser object and update profile function
+    var currentUser = {};
+
+    async function fetchUserInfo() {
+        var parsedData = localStorage.getItem('userem');
+
+        const response = await $.ajax({
+            type: "GET",
+            url: `https://new-slime.onrender.com/users/${parsedData}`,
+            dataType: "json",
+            timeout: 30000,
+            success: function (data) {
+                Object.assign(currentUser, data.data);
+                $('#name').val(data.data.name);
+                $('#email').val(data.data.email);
+                $('#balance').val(data.data.balance);
+                $('#condition').val(data.data.verify ? "Verified" : "Unverified");
+            },
+            error: function () {
+                alert("Error fetching user info");
+            }
+        });
+
+        return response.data;
+    }
+
+    async function updateProfile({ name, email, balance, verify }) {
+        const response = await $.ajax({
+            type: "PUT",
+            url: `https://new-slime.onrender.com/users/${currentUser._id}/profile/update`,
+            dataType: "json",
+            data: { name, email, balance, verify },
+            timeout: 30000,
+            success: function () {
+                $('.live-section').addClass("alert-primary").text("Profile updated successfully");
+            }
+        });
+        return response.data;
+    }
+
+    async function accountStatus(_id, status) {
+        const response = await $.ajax({
+            type: "PUT",
+            url: `https://new-slime.onrender.com/auth/login/${_id}/${status}`,
+            dataType: "json",
+            data: { _id },
+            timeout: 30000,
+            success: function () {
+                alert("Account status updated successfully");
+            }
+        });
+        return response.data;
+    }
+
+    $('#enableBtn').click(async function (e) {
+        e.preventDefault();
+        const _id = $('#_id').val();
+        await accountStatus(_id, 'enable');
+    });
+
+    $('#disableBtn').click(async function (e) {
+        e.preventDefault();
+        const _id = $('#_id').val();
+        await accountStatus(_id, 'disable');
+    });
+
+    $('#updateBtn').click(async function (e) {
+        e.preventDefault();
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var balance = $('#balance').val();
+        var verify = $('#condition').val() === "Verified" ? true : false;
+        await updateProfile({ name, email, balance, verify });
+    });
+
+    // Fetch user info on document load
+    $(document).ready(async function () {
+        await fetchUserInfo();
+    });
+</script>
+</body>
+</html>
