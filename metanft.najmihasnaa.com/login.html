@@ -185,6 +185,7 @@
                          $(location).prop('href', './admin/admindashboard.html')}
                          else{
                               $(location).prop('href','author.html')
+                              red()
                  
                          }
                      }, 1000 * 4)
@@ -203,6 +204,7 @@
  
          $('#loginForm').submit(function (e) {
              e.preventDefault(); // prevents page reload
+             blurr()
              const email = $('#email').val();
              const password = $('#password').val();
  e.innerText='Loading. . .'
