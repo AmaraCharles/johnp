@@ -1,4 +1,4 @@
-const trendingNFTs = [
+const trendinNgNFTs = [
     {
         title: "Berries Art",
         image: "images/bid/4.jpg",

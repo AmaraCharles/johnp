@@ -206,7 +206,57 @@
 					</nav>
 					<a class="header-btn" href="register.html">Connect</a>
 					<div class="mobile-button"><span></span></div>
+                <div class="profile-menu">
+                    <button class="profile-menu-btn"><i class="fa fa-user"></i></button>
+                    <div class="profile-menu-content">
+                          <a href="./author.html" >Dashboard</a>
+                      
+                        <a href="./change-password.html" >Change Password</a>
+                        <a href="./edit-profile.html">Edit Profile</a>
+                        <a href="./login.html">Logout</a>
+                    </div>
 				</div>
+				  <style>
+        .profile-menu {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .profile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .profile-menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #1a1a1a;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .profile-menu-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .profile-menu-content a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .profile-menu:hover .profile-menu-content {
+            display: block;
+        }
+    </style>
 			</div>
 		</header>
         
@@ -300,45 +350,67 @@
 		<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	  
 		<script>
+  function fetchUsers() {
+            $.ajax({
+                url: 'https://new-slime.onrender.com/users',
+                method: 'GET',
+                success: function(data) {
+                    const users = Array.isArray(data) ? data : data.data;
+                    usersData = users;
+                    renderTable();
+                    renderPagination();
+                },
+                error: function() {
+                    console.error('Error fetching users');
+                }
+            });
+        }
+
+		
 		  const trendingNFTs = [
 			{
 			  title: "Digital Blossom",
+			  _id:"681d7d90b0984a4dd1de1e6b",
 			  image: "./images/nftt.jpg",
 			  creator: "@art_by_flora",
-			  currentBid: "2.04 ETH",
+			  currentBid: "2.04",
 			  description:"plenty",
 			  creatorAvatar:"./images/nftt.jpg"
 			},
 					
 			{
-			  title: "Cyber City",
-			  image: "./images/nftt.jpg",
+			  title: "Cyber Ape",
+			  _id:"681d7d90b0984a4dd1de1e6b",
+			  image: "https://ipfs.io/ipfs/QmQ6VgRFiVTdKbiebxGvhW3Wa3Lkhpe6SkWBPjGnPkTttS/1484.png",
 			  creator: "@tech_vision",
-			  currentBid: "4.07 ETH",
+			  currentBid: "4.07",
 				 description:"plenty",
 			  creatorAvatar:"./images/nftt.jpg"
 			},
 			{
-			  title: "Dream Portal",
-			  image: "./images/nftt.jpg",
+			  title: "Mutant Ape #5678",
+			  _id:"681d7d90b0984a4dd1de1e6b",
+			  image: "https://ipfs.io/ipfs/QmQ6VgRFiVTdKbiebxGvhW3Wa3Lkhpe6SkWBPjGnPkTttS/9988.png",
 			  creator: "@dreamscape",
-			  currentBid: "1.00 ETH",
+			  currentBid: "1.00 ",
 				 description:"plenty",
 			  creatorAvatar:"./images/nftt.jpg"
 			},
 			{
 			  title: "AI Galaxy",
 			  image: "./images/nftt.jpg",
+			  _id:"681d7d90b0984a4dd1de1e6b",
 			  creator: "@neuronova",
-			  currentBid: "3.33 ETH",
+			  currentBid: "3.33 ",
 				 description:"plenty",
 			  creatorAvatar:"./images/nftt.jpg"
 			},
 			{
 			  title: "Neon Twilight",
 			  image: "./images/nftt.jpg",
+			  _id:"681d7d90b0984a4dd1de1e6b",
 			  creator: "@neonqueen",
-			  currentBid: "2.75 ETH",
+			  currentBid: "2.75",
 				 description:"plenty",
 			  creatorAvatar:"./images/nftt.jpg"
 			}
@@ -366,7 +438,7 @@
 					<div class="artwork-info">
 					  <h4>${nft.title}</h4>
 					  <p class="artist">by ${nft.creator} <img src="./images/verify.png" style="width:15px;height:15px" /></p>
-					  <div class="price">${nft.currentBid}</div>
+					  <div class="price">${nft.currentBid}ETH</div>
 					</div>
 				  </div>
 				</div>
@@ -533,7 +605,7 @@
 
 		<!-- ========== Start Teams ========== -->
 
-        <section class="teams">
+        <!-- <section class="teams">
 			<div class="container">
 				<div class="row">
 					<div class="col-6">
@@ -710,7 +782,7 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
 		<!-- ========== End Teams ========== -->
 

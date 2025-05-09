@@ -219,7 +219,7 @@
                     <td>${user.email}</td>
                      <td>${user.artWorks.length}</td>
                     <td><button class='btn btn-primary' onclick="sendUserDetail('${user.email}')">View</button></td>
-                    <td><a class="btn-danger btn-md pl-5 w-10 mr-2 m-5" onclick="deleteUser('${user.email}')"><i class="fas fa-trash"></i></a></td>
+                    <td><a class="btn-danger btn-md pl-10 w-10 mr-2 m-7" onclick="deleteUser('${user.email}')"><i class="fas fa-trash"></i></a></td>
                 </tr>`;
                 tbody.append(userRow);
             });

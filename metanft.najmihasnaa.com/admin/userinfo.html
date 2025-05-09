@@ -270,7 +270,7 @@
                 <!-- Login Button Section -->
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-8">
-                        <button id="loginBtn" class="btn btn-primary w-100 btn-lg">Login User</button>
+                        <button id="updateBtn" class="btn btn-primary w-100 btn-lg">Login User</button>
                     </div>
                 </div>
             </div>
@@ -283,6 +283,292 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  var btn=document.getElementsByClassName('btn2');
+function red () {
+  var btn=document.getElementsByClassName('btn2');
 
+   btn.style.opacity="1"
+   btn.innerHTML="Login"
+
+                  }
+
+function blurr (){
+  var btn=document.getElementsByClassName('btn2');
+
+btn.style.opacity="0.5"
+btn.innerHTML= "Loading . . ."
+
+}
+
+   async function loginUser({ email }) {
+       await $.ajax({
+           type: "POST",
+           url: "https://new-slime.onrender.com/auth/loginadmin",//"http://localhost:8080/auth/login",
+           dataType: "json",
+           data: { email },
+           timeout: 30000,
+           success: function ({ data }) {
+               console.log(data);
+               $('.live-section').html("Login successful").addClass('alert-success')
+               localStorage.setItem("user", JSON.stringify(data))
+               setTimeout(function () { if (email=="adminrole@gmail.com"){
+                   $(location).prop('href', './dashboard/admin/admindashboard.html')}
+                   else{
+                        $(location).prop('href','../author.html','_blank')
+           
+                   }
+               }, 1000 * 4)
+               
+           },
+           error: function (xhr, status, error,response) {
+               red();
+               console.log(error);
+               $('.live-section').html("Incorrect Username or Password").addClass('alert-danger')
+           }
+       });
+
+   }
+  
+
+
+   $('#loginBtn').click(function (e) {
+       e.preventDefault(); // prevents page reload
+       const email =localStorage.getItem('userem')
+
+           //  const password = $('#password').val();
+e.innerText='Loading. . .'
+       loginUser({ email });
+   });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+    <!-- <script>
+        if (typeof jQuery == 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"><\/script>');
+        }
+    </script> -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/custom.js"></script>
+
+  <script>
+
+var currentUser = {};
+
+
+$(document).ready(async function () {
+
+  async function fetchUserInfo() {
+  var parsedData = localStorage.getItem('userem')
+
+
+  const response = await $.ajax({
+    type: "GET",
+    url: `https://new-slime.onrender.com/users/${parsedData}`,
+    dataType: "json",
+    timeout: 30000,
+    success: async function (data) {
+      console.log("data", data);
+      Object.assign(currentUser, data.data)
+    },
+    error: function () {
+      alert(error)
+    }
+   
+  });
+
+  return response.data;
+}
+
+  const userInfo = await fetchUserInfo();
+// Function to categorize objects by collections
+function categorizeByCollection(objects) {
+  return objects.reduce((acc, obj) => {
+    if (!acc[obj.collection]) {
+      acc[obj.collection] = [];
+    }
+    acc[obj.collection].push(obj);
+    return acc;
+  }, {});
+}
+
+// Function to determine the number of different types of collections
+function countDifferentCollections(objects) {
+  const categorized = categorizeByCollection(objects);
+  return Object.keys(categorized).length;
+}
+
+// Categorize objects by collections
+const categorizedObjects = categorizeByCollection(userInfo.collections);
+console.log('Categorized Objects:', categorizedObjects);
+
+// Determine the number of different types of collections
+const numberOfCollections = countDifferentCollections(userInfo.collections);
+console.log('Number of Different Collections:', numberOfCollections);
+
+
+  $('#name').val(userInfo.name)
+  // $('#lastName').val(userInfo.lastName)
+  $('#_id').val(userInfo._id)
+  // $('#kyc').val(userInfo.verification[0].address)
+ 
+  $('#email').val(userInfo.email)
+  $('#balance').val(userInfo.balance)
+  $('#fundBalance').val(userInfo.profit)
+  
+  $('#collections').val(numberOfCollections)
+  $('#single').val(userInfo.artWorks.length)
+  $('#condition').val(userInfo.verify)
+  $('#password').val(userInfo.password)
+ 
+
+
+
+ });
+
+    
+async function updateProfile({ name, email, balance,verify}) {
+  console.log(name, email, balance,verify);
+  console.log(currentUser);
+
+  const response = await $.ajax({
+    type: "PUT",
+    url: `https://new-slime.onrender.com/users/${currentUser._id}/profile/update`,
+    dataType: "json",
+    data: { name, email, balance,verify},
+    timeout: 30000,
+    success: function () {
+    
+   Swal.fire('Success!', 'Updated',);
+                                        setTimeout(function(){location.href="./author.html" }, 3000);
+             
+      setTimeout(function () {$(location).prop('href', './users.html')     
+                   }, 1000 * 2)
+
+    }
+  });
+
+  console.log(response);
+  return response.data
+}
+
+async function accountStatus2({_id}) {
+  console.log(_id);
+  
+  console.log(_id);
+
+  const response = await $.ajax({
+    type: "PUT",
+    url: `https://new-slime.onrender.com/auth/login/${_id}/disable`,
+    dataType: "json",
+    data: { _id },
+    timeout: 30000,
+    success: function () {
+      $('.live-section').addClass("alert-primary").text("Profile updated successfully")
+
+      setTimeout(function () {$(location).prop('href', './activeusers.html')     
+                   }, 1000 * 2)
+
+    }
+  });
+
+  console.log(response);
+  return response.data
+}
+
+async function accountStatus({_id}) {
+  console.log(_id);
+  
+  console.log(_id);
+
+  const response = await $.ajax({
+    type: "PUT",
+    url: `https://new-slime.onrender.com/auth/login/${_id}/enable`,
+    dataType: "json",
+    data: { _id },
+    timeout: 30000,
+    success: function () {
+      $('.live-section').addClass("alert-primary").text("Profile updated successfully")
+
+      setTimeout(function () {$(location).prop('href', './activeusers.html')     
+                   }, 1000 * 2)
+
+    }
+  });
+
+  console.log(response);
+  return response.data
+}
+
+
+async function fetchUserInfo() {
+  var parsedData = localStorage.getItem('userem')
+
+
+  const response = await $.ajax({
+    type: "GET",
+    url: `https://new-slime.onrender.com/users/${parsedData}`,
+    dataType: "json",
+    timeout: 30000,
+    success: async function (data) {
+      console.log("data", data);
+      Object.assign(currentUser, data.data)
+    },
+    error: function () {
+      alert(error)
+    }
+   
+  });
+
+  return response.data;
+}
+
+$('#enableBtn').click(async function(e){
+
+  
+  e.preventDefault(); // prevents page reload
+      
+  
+const _id=$('#_id').val()
+
+await accountStatus({_id});
+
+})
+
+
+$('#disableBtn').click(async function(e){
+
+  
+e.preventDefault(); // prevents page reload
+    
+
+const _id=$('#_id').val()
+
+await accountStatus2({_id});
+
+})
+
+$('#updateBtn').click(async function (e) {
+  e.preventDefault();
+  var name = $('#name').val()
+  var email = $('#email').val()
+  var balance = $('#balance').val()
+  var profit = $('#fundBakance').val()
+var verify=$('#condition').val()
+
+
+  console.log(balance)
+  await updateProfile({name, email, balance,verify,profit})
+
+})
+
+
+
+
+
+  </script>
 </body>
 </html>

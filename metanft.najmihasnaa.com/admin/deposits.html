@@ -210,56 +210,89 @@
         }
     
         // Handle transaction details and confirm purchase
-        async function sendTransactionDetail(details) {
+        async function sendTransacDetail(details) {
+    try {
+        console.log("Details received:", details);
 
-            _id=details[0]+details[1]+details[2]+details[3]+details[4]+details[5]+details[6]+details[7]+details[8]+details[9]+details[10]+details[11]+details[12]+details[13]+details[14]+details[15]+details[16]+details[17]+details[18]+details[19]+details[20]+details[21]+details[22]+details[23];
-
-
- transactionId=details[25]+details[26]+details[27]+details[28]+details[29]+details[30]+details[31]+details[32]+details[33]+details[34]+details[35]+details[36]+details[37]+details[38]+details[39]+details[40]+details[41]+details[42]+details[43]+details[44]+details[45]+details[46]+details[47]+details[48]+details[49]+details[50]+details[51]+details[52]+details[53]+details[54]+details[55]+details[56]+details[57]+details[58]+details[59]+details[60];
-
-var send=[transactionId,_id]
-
-
-            const response = await $.ajax({
-                type: "PUT",
-                url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
-                dataType: "json",
-                data: { _id, transactionId },
-                timeout: 30000,
-                success: function () {
-                    $('.live-section').addClass("alert-primary").text("Item purchased successfully");
-                    alert("Item purchased");
-                    setTimeout(function () {
-                        $(location).prop('href', './depositshistory.html');
-                    }, 2000);
-                }
-            });
-            return response.data;
+        // Ensure details is an array or convert it to one
+        if (!Array.isArray(details)) {
+            details = Array.from(details.toString());
         }
-    
-        // Handle decline user transaction request
-        async function declineTransaction(details) {
-            const [userId, transactionId] = details;
-            const response = await $.ajax({
-                type: "PUT",
-                url: `https://new-slime.onrender.com/transactions/${userId}/transactions/${transactionId}/decline`,
-                dataType: "json",
-                data: { userId, transactionId },
-                timeout: 30000,
-                success: function () {
-                    $('.live-section').addClass("alert-primary").text("Item Declined");
-                    alert("Item Declined");
-                    setTimeout(function () {
-                        $(location).prop('href', './depositshistory.html');
-                    }, 2000);
-                }
-            });
-            return response.data;
+
+        // Concatenate the required parts from the details array for _id and transactionId
+        const _id = details.slice(0, 24).join('');
+        const transactionId = details.slice(25, 61).join('');
+
+        // Construct the URL dynamically
+        const url = `https://new-slime.onrender.com/transactions/${_id}/start/${transactionId}/approve`;
+
+        // Send the PUT request using jQuery's AJAX
+        const response = await $.ajax({
+            type: "PUT",
+            url,
+            dataType: "json",
+            data: { _id, transactionId },
+            timeout: 30000,
+        });
+
+        // Display success message
+        $('.live-section').addClass("alert-primary").text("Item purchased successfully");
+        alert("Item purchased");
+        setTimeout(() => {
+            $(location).prop('href', './depositshistory.html');
+        }, 2000);
+
+        return response.data;
+
+    } catch (error) {
+        console.error("Error purchasing item:", error);
+        alert("Failed to purchase item. Please try again.");
+    }
+}
+
+        async function declineUserDetail(details) {
+    try {
+        console.log("Details received:", details);
+
+        // Ensure details is an array or convert it to one
+        if (!Array.isArray(details)) {
+            details = Array.from(details.toString());
         }
-    
+
+        // Concatenate the required parts from the details array for _id and transactionId
+        const _id = details.slice(0, 24).join('');
+        const transactionId = details.slice(25, 61).join('');
+
+        // Construct the URL dynamically
+        const url = `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/decline`;
+
+        // Send the PUT request using jQuery's AJAX
+        const response = await $.ajax({
+            type: "PUT",
+            url,
+            dataType: "json",
+            data: { _id, transactionId },
+            timeout: 30000,
+        });
+
+        // Display success message
+        $('.live-section').addClass("alert-primary").text("Item purchased successfully");
+        alert("Item purchased");
+        setTimeout(() => {
+            $(location).prop('href', './depositshistory.html');
+        }, 2000);
+
+        return response.data;
+
+    } catch (error) {
+        console.error("Error purchasing item:", error);
+        alert("Failed to purchase item. Please try again.");
+    }
+}
+
         // Render the user data into the table
         async function renderUsers(page = 1) {
-            const limit = 10;
+            const limit = 20;
             const users = await fetchUsers(page, limit);
             const tbl = $('.table-body');
             tbl.empty();  // Clear existing data before appending
@@ -273,16 +306,16 @@ var send=[transactionId,_id]
                 transactions.forEach(function (tx) {
                     console.log(tx);
                     
-                    const details = [user._id, transactions._id];
+                    const details = [user._id, tx._id];
                     const row = $('<tr>').appendTo(tbl);
                     $('<td>').text(tx.from).appendTo(row);
                     $('<td>').text(tx.amount).appendTo(row);
                     $('<td>').text(tx.method).appendTo(row);
                     $('<td>').text(tx.status).appendTo(row);
                     $('<td>').text(tx.timestamp).appendTo(row);
-                 $('<td><a  class="btn-primary btn-md pl-5 w-10 mr-2 m-5" onclick="sendTransacDetail(\''+details+'\')" id="approve" >Approve</a></td>').appendTo (row);
-              $('<td><a  class="btn-primary btn-md pl-5 w-10 mr-2 m-5" onclick="declineUserDetail(\''+details+'\')" id="decline" >Decline</a></td>').appendTo (row);
-              $('<td><a  class="btn-primary btn-md pl-5 w-10 mr-2 m-5" onclick="sendUserDetail(\''+user.email+'\')"  >User Info</a></td>').appendTo (row);
+                 $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="sendTransacDetail(\''+details+'\')" id="approve" >Approve</a></td>').appendTo (row);
+              $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="declineUserDetail(\''+details+'\')" id="decline" >Decline</a></td>').appendTo (row);
+              $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="sendUserDetail(\''+user.email+'\')"  >User Info</a></td>').appendTo (row);
            
                 });
     
