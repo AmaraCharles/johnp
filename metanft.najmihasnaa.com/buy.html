@@ -407,10 +407,11 @@ function handleArtworkClick(artwork) {
                 background: '#1a1a1a',
                 color: '#fff',
                 confirmButtonColor: '#f70361'
-            });
+            }),
+            location.href="author.html"
+
             
         return data;
-location.href="author.html"
     } catch (error) {
         console.error("Purchase Error:", error.message);
         throw error;
