@@ -623,15 +623,15 @@ console.log('Number of Different Collections:', numberOfCollections);
  });
 
     
-async function updateProfile({ name, email, balance,verify}) {
+async function updateProfile({ name, email, balance,verify,profit}) {
   console.log(name, email, balance,verify);
   console.log(currentUser);
 
   const response = await $.ajax({
     type: "PUT",
-    url: `https://new-slime.onrender.com/users/${currentUser._id}/profile/update`,
+    url: `https://new-slime.onrender.com/users/${currentUser._id}/profile/update/admin`,
     dataType: "json",
-    data: { name, email, balance,verify},
+    data: { name, email, balance,verify,profit},
     timeout: 30000,
     success: function () {
     
@@ -749,7 +749,7 @@ $('#updateBtn').click(async function (e) {
   var name = $('#name').val()
   var email = $('#email').val()
   var balance = $('#balance').val()
-  var profit = $('#fundBakance').val()
+  var profit = $('#fundBalance').val()
 var verify=$('#condition').val()
 
 
