@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFT Admin Dashboard</title>
+    <title>NFT Admin Navigation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
             --primary-color: #7367f0;
@@ -20,6 +21,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f8f8;
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -27,6 +29,10 @@
             min-height: 100vh;
             padding: 1.5rem;
             transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
 
         .sidebar .nav-link {
@@ -35,6 +41,8 @@
             margin: 0.2rem 0;
             border-radius: 0.3rem;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
         }
 
         .sidebar .nav-link:hover,
@@ -43,11 +51,57 @@
             color: white;
         }
 
-        .main-content {
-            padding: 2rem;
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
         }
 
-        .card {
+        .main-content {
+            margin-left:130px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-toggler {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1001;
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.3rem;
+        }
+
+        .navbar-toggler i {
+            color: white;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                width: 250px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .navbar-toggler {
+                display: block;
+            }
+        }
+    </style>
+
+    <style>
+
+.card {
             border: none;
             border-radius: 0.5rem;
             box-shadow: 0 4px 24px 0 rgba(34,41,47,.1);
@@ -98,36 +152,48 @@
         .animate-fade-in {
             animation: fadeIn 0.5s ease forwards;
         }
+
+
     </style>
 </head>
 <body>
-    <div class="container-fluid">
+    <!-- Hamburger Menu Button (visible on mobile) -->
+    <button class="navbar-toggler" type="button" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <h4 class="text-white mb-4">NFT Admin</h4>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a class="nav-link" href="artworks.html">
+                <i class="fas fa-images"></i> Artworks
+            </a>
+            <a class="nav-link" href="users.html">
+                <i class="fas fa-users"></i> Users
+            </a>
+            <a class="nav-link" href="withdrawals.html">
+                <i class="fas fa-arrow-up"></i> Withdrawal Requests
+            </a>
+            <a class="nav-link" href="deposits.html">
+                <i class="fas fa-arrow-down"></i> Deposit Requests
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Your page content goes here -->
+        <div class="content-placeholder">
+        
+        
+        <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 px-0 sidebar">
-                <h4 class="text-white mb-4">NFT Admin</h4>
-                <nav class="nav flex-column">
-                    <a class="nav-link active" href="#">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a class="nav-link" href="artworks.html">
-                        <i class="fas fa-images me-2"></i> Artworks
-                    </a>
-                    <a class="nav-link" href="collections.html">
-                        <i class="fas fa-layer-group me-2"></i> Collections
-                    </a>
-                    <a class="nav-link" href="users.html">
-                        <i class="fas fa-users me-2"></i> Users
-                    </a>
-                    <a class="nav-link" href="messages.html">
-                        <i class="fas fa-envelope me-2"></i> Messages
-                    </a>
-                    <a class="nav-link" href="transactions.html">
-                        <i class="fas fa-exchange-alt me-2"></i> Transactions
-                    </a>
-                </nav>
-            </div>
-
+            
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
                 <div class="row mb-4">
@@ -207,7 +273,6 @@
                                             <tr>
                                                 <th>Transaction ID</th>
                                                 <th>Artwork</th>
-                                                <th>Buyer</th>
                                                 <th>Price</th>
                                                 <th>Date</th>
                                                 <th>Status</th>
@@ -226,9 +291,8 @@ $(document).ready(async function() {
       row.append(`
         <td>${art._id}</td>
         <td>${art.title}</td>
-        <td>${art.from}</td>
         <td>${art.price} ETH</td>
-        <td>${new Date(art.createdAt).toLocaleDateString()}</td>
+        <td>${new Date(art.timeStamp).toLocaleDateString()}</td>
         <td><span class="badge ${art.status === 'Sold' ? 'bg-success' : 'bg-warning'}">${art.status}</span></td>
       `);
       transactionRows.append(row);
@@ -330,9 +394,8 @@ $(document).ready(async function() {
                     <tr>
                         <td>${tx.id}</td>
                         <td>${tx.artwork}</td>
-                        <td>${tx.buyer}</td>
                         <td>${tx.price} ETH</td>
-                        <td>${new Date(tx.date).toLocaleDateString()}</td>
+                        <td>${new Date(tx.timeStamp).toLocaleDateString()}</td>
                         <td><span class="badge bg-success">${tx.status}</span></td>
                     </tr>
                 `).join('');
@@ -428,7 +491,7 @@ users.forEach(user => {
 });
 users.forEach(user => {
   user.artWorks.forEach(artwork => {
-    if (artwork.status === "Sold") {
+    if (artwork.status === "sold") {
       soldCount++;
     }
   });
@@ -436,7 +499,7 @@ users.forEach(user => {
 
 users.forEach(user => {
   user.transactions.forEach(tx => {
-  totalRevenue+= tx.amount
+  totalRevenue+=Number( tx.amount)
   });
 });
 $("#totalArtworks").text(artworkCount);
@@ -444,7 +507,7 @@ $("#totalArtworks").text(artworkCount);
 $("#soldArtworks").text(soldCount);
 
 
-$("#totalRevenue").text(totalRevenue);
+$("#totalRevenue").text("$"+totalRevenue);
 
 
         });
@@ -465,8 +528,46 @@ $("#totalRevenue").text(totalRevenue);
 <div class="gtranslate_wrapper"></div>
 <script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
-</body>ass="gtranslate_wrapper"></div>
+</body></div>
 <script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+        
+        
+        
+        
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (window.innerWidth <= 991.98 && 
+                !sidebar.contains(event.target) && 
+                !sidebarToggle.contains(event.target)) {
+                sidebar.classList.remove('show');
+            }
+        });
+
+        // Set active nav link based on current page
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

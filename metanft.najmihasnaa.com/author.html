@@ -541,11 +541,65 @@
         </div>
     </div>
 
+      <!-- Transaction History Modal -->
+      <div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="transactionHistoryModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="transactionHistoryModalLabel">Transaction History</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <ul class="nav nav-tabs mb-3" id="transactionTabs" role="tablist">
+                          <li class="nav-item" role="presentation">
+                              <button class="nav-link active" id="withdrawals-tab" data-bs-toggle="tab" data-bs-target="#withdrawals" type="button" role="tab">Withdrawals</button>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                              <button class="nav-link" id="deposits-tab" data-bs-toggle="tab" data-bs-target="#deposits" type="button" role="tab">Deposits</button>
+                          </li>
+                      </ul>
+                      <div class="tab-content" id="transactionTabsContent">
+                          <div class="tab-pane fade show active" id="withdrawals" role="tabpanel">
+                              <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                  <table class="table table-dark table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>Date</th>
+                                              <th>Amount (ETH)</th>
+                                              <th>Address</th>
+                                              <th>Status</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody id="withdrawalsTableBody">
+                                          <!-- Withdrawal history will be populated here -->
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="tab-pane fade" id="deposits" role="tabpanel">
+                              <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                  <table class="table table-dark table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>Date</th>
+                                              <th>Amount (ETH)</th>
+                                              <th>From</th>
+                                              <th>Status</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody id="depositsTableBody">
+                                          <!-- Deposit history will be populated here -->
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
       <!-- Custom JS -->
-<script>
-
-
-
 function cancelWalletFunding() {
   console.log('User canceled wallet funding.');
   document.getElementById('fundingAmount').value = '';
@@ -998,256 +1052,75 @@ localStorage.setItem("artistData",JSON.stringify(artistData))
         document.querySelector('#spotBalance').textContent = `${artistData.profit} ETH`;
        
         document.querySelector('.profile-name').textContent = artistData.name;
-        document.querySelector('#avatar').src = artistData.creatorAvatar;
-        
-        document.querySelector('.profile-username').textContent = `@${artistData.username}`;
-       let totalProfit = 0;
+        // Add transaction history buttons next to withdraw and fund buttons
+        const balanceInfo = document.querySelector('.balance-info');
+        const historyButton = document.createElement('button');
+        historyButton.className = 'btn btn-outline-light ms-2';
+        historyButton.innerHTML = '<i class="fas fa-history"></i> Transaction History';
+        historyButton.onclick = showTransactionHistory;
+        balanceInfo.insertAdjacentElement('afterend', historyButton);
 
-// Iterate through each artwork and sum up the currentBid of sold items
-artistData.artWorks.forEach((artwork) => {
-    if (artwork.status === "sold") {
-        totalProfit += artwork.currentBid;
+        // Load initial transaction history
+        loadTransactionHistory();
+    });
+
+    // Function to show transaction history modal
+    function showTransactionHistory() {
+        const modal = new bootstrap.Modal(document.getElementById('transactionHistoryModal'));
+        modal.show();
     }
 
-     document.querySelector('#totalProfit').textContent = `${totalProfit} `;
-       
-});
+    // Function to load transaction history
+    async function loadTransactionHistory() {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const response = await $.ajax({
+                type: 'GET',
+                url: `https://new-slime.onrender.com/transactions/${user._id}/all`,
+                dataType: 'json',
+                timeout: 30000
+            });
 
-console.log("Total Profit from sold artworks:", totalProfit);
- // document.querySelector('.profile-email').textContent = artistData.email;
-    });
-        // document.querySelector('.profile-phone').textContent = artistData.phoneNumber;
-// Function to copy wallet address
-function copyWalletAddress() {
-            const address = '0x4bbcd1cd24cd0dcba589cd9349dd595744686a6d';
-            navigator.clipboard.writeText(address).then(() => {
-                Swal.fire({
-                    title: 'Copied!',
-                    text: 'Wallet address copied to clipboard',
-                    icon: 'success',
-                    background: '#1a1a1a',
-                    color: '#fff',
-                    confirmButtonColor: '#f70361',
-                    timer: 1500
-                });
+            // Populate withdrawals table
+            const withdrawalsBody = document.getElementById('withdrawalsTableBody');
+            withdrawalsBody.innerHTML = '';
+            const withdrawals = response.data.filter(tx => tx.type === 'withdrawal');
+            withdrawals.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(tx.timestamp).toLocaleString()}</td>
+                    <td>${tx.amount} ETH</td>
+                    <td>${tx.address}</td>
+                    <td><span class="badge bg-${tx.status === 'completed' ? 'success' : 'warning'}">${tx.status}</span></td>
+                `;
+                withdrawalsBody.appendChild(row);
+            });
+
+            // Populate deposits table
+            const depositsBody = document.getElementById('depositsTableBody');
+            depositsBody.innerHTML = '';
+            const deposits = response.data.filter(tx => tx.type === 'deposit');
+            deposits.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(tx.timestamp).toLocaleString()}</td>
+                    <td>${tx.amount} ETH</td>
+                    <td>${tx.from}</td>
+                    <td><span class="badge bg-${tx.status === 'completed' ? 'success' : 'warning'}">${tx.status}</span></td>
+                `;
+                depositsBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Error loading transaction history:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to load transaction history',
+                icon: 'error',
+                background: '#1a1a1a',
+                color: '#fff',
+                confirmButtonColor: '#f70361'
             });
         }
-       // Process artworks by status
-      const getArtistData= localStorage.getItem("artistData")
-      const artistData=JSON.parse(getArtistData)
-const artworks = {
-    listed: artistData.artWorks ? artistData.artWorks.filter(art => art.status === 'listed') : [],
-    unlisted: artistData.artWorks ? artistData.artWorks.filter(art => art.status === 'unlisted') : [],
-    sold: artistData.artWorks ? artistData.artWorks.filter(art => art.status === 'Sold') : []
-};
-
-// Function to populate artworks in a tab
-function populateArtworks(tabName) {
-    var getUser=localStorage.getItem("user")
-    var user=JSON.parse(getUser)
-
-    const container = document.getElementById(`${tabName}-tab`);
-    container.innerHTML = '';
-
-    artworks[tabName].forEach((art, index) => {
-
-        const detail= {userid:user._id,transacId:art._id}
-        console.log(detail);
-        
-       const detais=JSON.stringify(detail)
-       const details=encodeURIComponent(detais)
-localStorage.setItem("subdetails",details)
-
-        const artworkCard = document.createElement('div');
-        artworkCard.className = 'artwork-card';
-        artworkCard.innerHTML = `
-            <img src="${art.image}" alt="${art.title}" class="artwork-image">
-            <div class="artwork-details">
-                <h3 class="artwork-title">${art.title}</h3>
-                <p>${art.description || ''}</p>
-                <div class="artwork-meta">
-                    <span>${art.price} ETH</span>
-                    <span>${new Date(art.timeStamp).toLocaleDateString()}</span>
-                </div>
-               ${tabName === 'unlisted' ? `
-    <button class="list-button btn btn-success" data-index="${index}" >List Artwork</button>
-` : ''}
-
-            </div>
-        `;
-        container.appendChild(artworkCard);
-    });
-
-    // Attach event listeners to "List" buttons if in unlisted tab
-    if (tabName === 'unlisted') {
-        container.querySelectorAll('.list-button').forEach(button => {
-            button.addEventListener('click', async () => {
-                const index = button.dataset.index;
-                const artwork = artworks[tabName][index];
-
-                const result = await Swal.fire({
-                    title: 'List this artwork?',
-                    html: `A listing fee of <strong>0.1 ETH</strong> will be charged.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, List it',
-                    cancelButtonText: 'Cancel'
-                });
-
-                if (result.isConfirmed) {
-                   var subdetails= localStorage.getItem("subdetails")
-sendTransacDetail(subdetails)
-                    // listArtwork(artwork);
-                    
-                }
-            });
-        });
     }
-}
 
-function listArtwork(artwork) {
-    
-
-    console.log(`Listing artwork: ${artwork.title}`);
-    // You might update a DB, send API request, or move to a "listed" array, etc.
-}
-// Initialize with listed artworks
-populateArtworks('listed');
-
-// Tab switching function
-window.switchTab = function (tabName) {
-    // Toggle active class on tab buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-
-    // Hide/show the correct tab
-    document.querySelectorAll('.artwork-grid').forEach(grid => {
-        grid.style.display = 'none';
-    });
-    const activeGrid = document.getElementById(`${tabName}-tab`);
-    activeGrid.style.display = 'grid';
-
-    // Populate artworks for the selected tab
-    populateArtworks(tabName);
-};
- 
-        // Store modal instance globally
-       
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('spotBalance').innerText = '2.50 ETH';
-            document.getElementById('fundedBalance').innerText = '1.75 ETH';
-            populateArtworks('listed');
-        });
-    </script>
-
-    <script>
-
-
-
-
-    </script>
-</body>
-</html>
-<style>
-@media (max-width: 768px) {
-    .container.author-profile {
-        padding: 20px 10px;
-        max-width: 100%;
-        margin: 0;
-        overflow-x: hidden;
-    }
-    .profile-container {
-        padding: 15px 10px;
-        margin: 0;
-    }
-    .profile-stats {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-    }
-    .tab-buttons {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .artwork-card {
-        width: 100%;
-        margin: 0 auto;
-    }
-}
-</style>
-<div class="gtranslate_wrapper"></div>
-<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
-<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
-</body>
-</html>
-
-<div class="modal fade" id="fundModal" tabindex="-1" aria-labelledby="fundModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fundModalLabel">Fund Wallet</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="fundAmount" class="form-label">Amount (ETH)</label>
-                    <input type="number" class="form-control" id="fundAmount" min="0.2" step="0.1">
-                </div>
-                <div class="mb-3">
-                    <label for="fundAddress" class="form-label">Wallet Address</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="fundAddress" value="0x4bbcd1cd24cd0dcba589cd9349dd595744686a6d" readonly>
-                        <button class="btn btn-outline-secondary" type="button" onclick="copyFundAddress()">Copy</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="withdraw-btn" onclick="processFunding()">Confirm Funding</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script>
-
-function copyFundAddress() {
-    const address = document.getElementById('fundAddress').value;
-    navigator.clipboard.writeText(address).then(() => {
-        Swal.fire({
-            title: 'Copied!',
-            text: 'Wallet address copied to clipboard',
-            icon: 'success',
-            background: '#1a1a1a',
-            color: '#fff',
-            confirmButtonColor: '#f70361',
-            timer: 1500
-        });
-    });
-}
-function processFunding() {
-    const amount = parseFloat(document.getElementById('fundAmount').value);
-    if (isNaN(amount) || amount < 0.2) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Minimum funding amount is 0.2 ETH',
-            icon: 'error',
-            background: '#1a1a1a',
-            color: '#fff',
-            confirmButtonColor: '#f70361'
-        });
-        return;
-    }
-    // Add your funding processing logic here
-    $('#fundModal').modal('hide');
-}
-</script>
-<div class="gtranslate_wrapper"></div>
-<script>window.gtranslateSettings = {"default_language":"en","native_language_names":true,"detect_browser_language":true,"languages":["en","fr","it","es","de","gd","zh-TW","ja","ru","pt","tr"],"wrapper_selector":".gtranslate_wrapper","alt_flags":{"en":"usa","pt":"brazil","es":"mexico"}}</script>
-<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
-</body>
-</html>
+    // ... rest of existing code ...

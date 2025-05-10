@@ -6,6 +6,8 @@
     <title>NFT Admin Navigation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+   
     <style>
         :root {
             --primary-color: #7367f0;
@@ -127,10 +129,10 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-        <!-- Your page content goes here -->
-        <div class="content-placeholder">
-            <style>
-                  .card {
+
+
+        <style>
+        .card {
             border: none;
             border-radius: 0.5rem;
             box-shadow: 0 4px 24px 0 rgba(34,41,47,.1);
@@ -219,19 +221,17 @@
             <div class="col-md-9 col-lg-10 main-content">
                 <div class="card">
                     <div class="card-body">
-                        <h3>Artworks Management</h3>
+                        <h3>Withdrawal Management</h3>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>From</th>
-                                        <th>Title</th>
-                                        <th>Collection</th>
-                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Address</th>
                                         <th>Status</th>
-                                        <th>Action</th>
-                                        <th>Action</th>
-                                        <th>Action</th>
+                                        <th>Tmestamp</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody class="table-body">
@@ -286,101 +286,116 @@
         }
     
         // Handle transaction details and confirm purchase
-        async function sendTransactionDetail(details) {
+        async function sendTransacDetail(details) {
+    try {
+        console.log("Details received:", details);
 
-            _id=details[0]+details[1]+details[2]+details[3]+details[4]+details[5]+details[6]+details[7]+details[8]+details[9]+details[10]+details[11]+details[12]+details[13]+details[14]+details[15]+details[16]+details[17]+details[18]+details[19]+details[20]+details[21]+details[22]+details[23];
-
-
- transactionId=details[25]+details[26]+details[27]+details[28]+details[29]+details[30]+details[31]+details[32]+details[33]+details[34]+details[35]+details[36]+details[37]+details[38]+details[39]+details[40]+details[41]+details[42]+details[43]+details[44]+details[45]+details[46]+details[47]+details[48]+details[49]+details[50]+details[51]+details[52]+details[53]+details[54]+details[55]+details[56]+details[57]+details[58]+details[59]+details[60];
-
-var send=[transactionId,_id]
-
-
-            const response = await $.ajax({
-                type: "PUT",
-                url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
-                dataType: "json",
-                data: { _id, transactionId },
-                timeout: 30000,
-                success: function () {
-                    $('.live-section').addClass("alert-primary").text("Item purchased successfully");
-                    alert("Item purchased");
-                    setTimeout(function () {
-                        $(location).prop('href', './deposits.html');
-                    }, 2000);
-                }
-            });
-            return response.data;
+        // Ensure details is an array or convert it to one
+        if (!Array.isArray(details)) {
+            details = Array.from(details.toString());
         }
-    
-        // Handle decline user transaction request
-        async function declineTransaction(details) {
-            const [userId, transactionId] = details;
-            const response = await $.ajax({
-                type: "PUT",
-                url: `https://new-slime.onrender.com/transactions/${userId}/transactions/${transactionId}/decline`,
-                dataType: "json",
-                data: { userId, transactionId },
-                timeout: 30000,
-                success: function () {
-                    $('.live-section').addClass("alert-primary").text("Item Declined");
-                    alert("Item Declined");
-                    setTimeout(function () {
-                        $(location).prop('href', './deposits.html');
-                    }, 2000);
-                }
-            });
-            return response.data;
+
+        // Concatenate the required parts from the details array for _id and transactionId
+        const _id = details.slice(0, 24).join('');
+        const transactionId = details.slice(25, 61).join('');
+
+        // Construct the URL dynamically
+        const url = `https://new-slime.onrender.com/transactions/${_id}/withdrawals/${transactionId}/confirm`;
+
+        // Send the PUT request using jQuery's AJAX
+        const response = await $.ajax({
+            type: "PUT",
+            url,
+            dataType: "json",
+            data: { _id, transactionId },
+            timeout: 30000,
+        });
+
+        // Display success message
+        $('.live-section').addClass("alert-primary").text("Withdrawal approved successfully");
+        alert("withdrawal approved");
+        setTimeout(() => {
+            $(location).prop('href', './withdrawals.html');
+        }, 2000);
+
+        return response.data;
+
+    } catch (error) {
+        console.error("Error purchasing item:", error);
+        alert("Failed to purchase item. Please try again.");
+    }
+}
+
+        async function declineUserDetail(details) {
+    try {
+        console.log("Details received:", details);
+
+        // Ensure details is an array or convert it to one
+        if (!Array.isArray(details)) {
+            details = Array.from(details.toString());
         }
-    
+
+        // Concatenate the required parts from the details array for _id and transactionId
+        const _id = details.slice(0, 24).join('');
+        const transactionId = details.slice(25, 61).join('');
+
+        // Construct the URL dynamically
+        const url = `https://new-slime.onrender.com/transactions/${_id}/withdrawals/${transactionId}/decline`;
+
+        // Send the PUT request using jQuery's AJAX
+        const response = await $.ajax({
+            type: "PUT",
+            url,
+            dataType: "json",
+            data: { _id, transactionId },
+            timeout: 30000,
+        });
+
+        // Display success message
+        $('.live-section').addClass("alert-primary").text("Withdrawal declined");
+        alert("Item purchased");
+        setTimeout(() => {
+            $(location).prop('href', './deposits.html');
+        }, 2000);
+
+        return response.data;
+
+    } catch (error) {
+        console.error("Error purchasing item:", error);
+        alert("Failed to purchase item. Please try again.");
+    }
+}
+
         // Render the user data into the table
         async function renderUsers(page = 1) {
-            const limit = 10;
+            const limit = 20;
             const users = await fetchUsers(page, limit);
             const tbl = $('.table-body');
             tbl.empty();  // Clear existing data before appending
     
             users.forEach(function (user) {
-                const transactions = user.collections;
+                const transactions = user.withdrawals;
                 const artworks = user.artWorks;
+    console.log(transactions);
     
                 // Render artworks data
-                artworks.forEach(function (art) {
-                    console.log(art);
+                transactions.forEach(function (tx) {
+                    console.log(tx);
                     
-                    const details = [user._id, art._id];
+                    const details = [user._id, tx._id];
                     const row = $('<tr>').appendTo(tbl);
-                    $('<td>').text(art.creator).appendTo(row);
-                    $('<td>').text(art.title).appendTo(row);
-                    $('<td>').text("none").appendTo(row);
-                    $('<td>').text(art.category).appendTo(row);
-                    $('<td>').text(art.status).appendTo(row);
-                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="sendTransactionDetail(\'' + details + '\')" id="approve">Buy</a></td>').appendTo(row);
-                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="viewArt(\'' + details + '\')" id="decline">View Art</a></td>').appendTo(row);
-                    $('<td><a class="btn-primary btn-sm pl-5 w-10 mr-2 m-3" onclick="sendUserDetail(\'' + user.email + '\')">User Info</a></td>').appendTo(row);
+                    $('<td>').text(tx.from).appendTo(row);
+                    $('<td>').text(tx.amount+"ETH").appendTo(row);
+                    $('<td>').text(tx.address).appendTo(row);
+                    $('<td>').text(tx.status).appendTo(row);
+                    $('<td>').text(tx.timestamp).appendTo(row);
+                 $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="sendTransacDetail(\''+details+'\')" id="approve" >Approve</a></td>').appendTo (row);
+              $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="declineUserDetail(\''+details+'\')" id="decline" >Decline</a></td>').appendTo (row);
+              $('<td><a  class="btn-primary btn-md pl-10 w-10 mr-2 m-7" onclick="sendUserDetail(\''+user.email+'\')"  >User Info</a></td>').appendTo (row);
+           
                 });
     
-                // Render transactions data
-                transactions.forEach(function (transaction) {
-                    const details = [user._id, transaction._id];
-                    const row = $('<tr>').appendTo(tbl);
-                    $('<td>').text(transaction.from).appendTo(row);
-                    $('<td>').text(transaction.title).appendTo(row);
-                    $('<td>').text(transaction.collection).appendTo(row);
-                    $('<td>').text(transaction.category).appendTo(row);
-                    $('<td>').text(transaction.status).appendTo(row);
-                   // Buy Button
-    const buyButton = $('<td><a class="btn btn-primary btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="sendTransactionDetail(' + JSON.stringify(details) + ')" id="approve">Buy</a></td>');
-    buyButton.appendTo(row);
-
-    // View Art Button
-    const viewButton = $('<td><a class="btn btn-secondary btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="viewArt(' + JSON.stringify(details) + ')" id="decline">View Art</a></td>');
-    viewButton.appendTo(row);
-
-    // User Info Button
-    const userInfoButton = $('<td><a class="btn btn-info btn-lg w-100 px-4 py-2 m-1 text-center" href="#" onclick="sendUserDetail(\'' + user.email + '\')">User Info</a></td>');
-    userInfoButton.appendTo(row);
-                });
+              
             });
     
             // Pagination
@@ -404,11 +419,7 @@ var send=[transactionId,_id]
             renderUsers();  // Initial render
         });
     </script>
-    
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Toggle sidebar on mobile
         document.getElementById('sidebarToggle').addEventListener('click', function() {
