@@ -298,7 +298,7 @@ var send=[transactionId,_id]
 
             const response = await $.ajax({
                 type: "PUT",
-                url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
+                url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm/admin`,
                 dataType: "json",
                 data: { _id, transactionId },
                 timeout: 30000,
@@ -306,7 +306,7 @@ var send=[transactionId,_id]
                     $('.live-section').addClass("alert-primary").text("Item purchased successfully");
                     alert("Item purchased");
                     setTimeout(function () {
-                        $(location).prop('href', './deposits.html');
+                        $(location).prop('href', './artworks.html');
                     }, 2000);
                 }
             });

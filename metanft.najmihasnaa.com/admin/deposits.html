@@ -342,7 +342,7 @@
         });
 
         // Display success message
-        $('.live-section').addClass("alert-primary").text("Item purchased successfully");
+        $('.live-section').addClass("alert-primary").text("Deposit approved successfully");
         alert("Item purchased");
         setTimeout(() => {
             $(location).prop('href', './deposits.html');
@@ -370,7 +370,7 @@
         const transactionId = details.slice(25, 61).join('');
 
         // Construct the URL dynamically
-        const url = `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/decline`;
+        const url = `https://new-slime.onrender.com/transactions/gtfo/${_id}/start/${transactionId}/decline`;
 
         // Send the PUT request using jQuery's AJAX
         const response = await $.ajax({
@@ -382,7 +382,7 @@
         });
 
         // Display success message
-        $('.live-section').addClass("alert-primary").text("Item purchased successfully");
+        $('.live-section').addClass("alert-primary").text("Deposit declined successfully");
         alert("Item purchased");
         setTimeout(() => {
             $(location).prop('href', './deposits.html');
