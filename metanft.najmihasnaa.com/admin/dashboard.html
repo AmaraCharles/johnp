@@ -261,7 +261,7 @@
                                 <div class="artwork-grid" id="recentArtworks">
 
 
-                                    
+
                                     <!-- Artwork cards will be dynamically added here -->
                                 </div>
                             </div>
@@ -764,7 +764,7 @@ var dummyName=getRandomUser(dummies)
                 document.getElementById('totalUsers').textContent = data.totalUsers;
                 document.getElementById('totalArtworks').textContent = data.totalArtworks;
                 document.getElementById('soldArtworks').textContent = data.soldArtworks;
-                document.getElementById('totalRevenue').textContent = `$${data.totalRevenue}`;
+                document.getElementById('totalRevenue').textContent = `ETH${data.totalRevenue}`;
 
                 // Render recent artworks
                 const artworksContainer = document.getElementById('recentArtworks');
@@ -898,7 +898,7 @@ $("#totalArtworks").text(artworkCount);
 $("#soldArtworks").text(soldCount);
 
 
-$("#totalRevenue").text("$"+totalRevenue);
+$("#totalRevenue").text("ETH"+totalRevenue);
 
 
         });
