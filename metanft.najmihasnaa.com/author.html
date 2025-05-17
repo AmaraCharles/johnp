@@ -991,48 +991,50 @@ async function processWithdrawal(e) {
 
 }
 
-      async function sendTransacDetail(details){
+async function sendTransacDetail(details) {
+  try {
+    const detailss = decodeURIComponent(details);
+    const parseDetails = JSON.parse(detailss);
 
+    console.log(parseDetails);
 
+    const _id = parseDetails.userid;
+    const transactionId = parseDetails.transacId;
+    const requiredAmount = parseDetails.amount; // Assuming this is needed
+    const userBalance = parseFloat(localStorage.getItem("amy")); // Get balance from localStorage
 
+    console.log("_id:", _id);
+    console.log("transactionId:", transactionId);
+    console.log("User balance:", userBalance);
+    console.log("Required amount:", requiredAmount);
 
-const detailss=decodeURIComponent(details)
-const parseDetails=JSON.parse(detailss)
+    // Check for insufficient funds
+    if (userBalance < requiredAmount) {
+      Swal.fire('Insufficient Funds', 'You do not have enough funds to complete this transaction.', 'error');
+      return; // Stop the function
+    }
 
-console.log(parseDetails);
+    const response = await $.ajax({
+      type: "PUT",
+      url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
+      dataType: "json",
+      data: { _id, transactionId },
+      timeout: 30000,
+      success: function () {
+        Swal.fire('Listed!', 'Your artwork has been listed.', 'success');
+        setTimeout(function () {
+          $(location).prop('href', './author.html');
+        }, 2000);
+      }
+    });
 
-// var [transactionId,_id]=details;
+    console.log(response);
+    return response.data;
 
-// var amount=localStorage.getItem("amy")
-// alert(amount)
-_id=parseDetails.userid
-// amount=parseDetails.amount
-transactionId=parseDetails.transacId
-var send=[transactionId,_id]
-console.log(_id)
-console.log(transactionId)
-
-
-
-
-const response = await $.ajax({
-type: "PUT",
-url: `https://new-slime.onrender.com/transactions/${_id}/transactions/${transactionId}/confirm`,
-dataType: "json",
-data:{_id,transactionId},
-timeout: 30000,
-
-success: function () {
-    Swal.fire('Listed!', 'Your artwork has been listed.', 'success');
-setTimeout(function () {$(location).prop('href', './author.html')     
-      }, 1000 * 2)
-
-}
-});
-
-console.log(response);
-return response.data
-
+  } catch (error) {
+    console.error("An error occurred:", error);
+    Swal.fire('Error', 'Something went wrong while processing the transaction.', 'error');
+  }
 }
 //decline user withdrawal request
 
