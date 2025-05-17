@@ -818,6 +818,7 @@ var dataObj={
         const userBalance = Number(balance);
 
         console.log("Balance:", userBalance);
+console.log({userBalance,amount});
 
         // Check for insufficient funds
         if (userBalance < 0.4 || amount > userBalance) {
@@ -889,7 +890,8 @@ async function processWithdrawal(e) {
     const address = document.getElementById('withdrawAddress').value;
     const spotBalanceText = document.getElementById('spotBalance').innerText;
     const spotBalance = parseFloat(spotBalanceText.replace(' ETH', ''));
-
+const user=JSON.parse(localStorage.getItem("user"))
+const userBalance=user.balance
     // Basic validations
     if (!amount || !address) {
         return Swal.fire({
@@ -902,10 +904,10 @@ async function processWithdrawal(e) {
         });
     }
 
-    if (amount > spotBalance) {
+    if (userBalance < 0.4 || amount > userBalance) {
         return Swal.fire({
             title: 'Insufficient Balance',
-            text: 'Withdrawal amount exceeds your spot balance',
+            text: "You don't have enough funds to proceed with this transaction.",
             icon: 'error',
             background: '#1a1a1a',
             color: '#fff',
