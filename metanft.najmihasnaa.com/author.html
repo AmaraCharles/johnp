@@ -1000,16 +1000,16 @@ async function sendTransacDetail(details) {
 
     const _id = parseDetails.userid;
     const transactionId = parseDetails.transacId;
-    const requiredAmount = parseDetails.amount; // Assuming this is needed
-    const userBalance = parseFloat(localStorage.getItem("amy")); // Get balance from localStorage
-
+    const requiredAmount = localStorage.getItem("lfee"); // Assuming this is needed
+    const userBalancefromls = JSON.parse(localStorage.getItem("user")); // Get balance from localStorage
+const userBalance=userBalancefromls.balance
     console.log("_id:", _id);
     console.log("transactionId:", transactionId);
     console.log("User balance:", userBalance);
     console.log("Required amount:", requiredAmount);
 
     // Check for insufficient funds
-    if (userBalance < requiredAmount) {
+    if (Number(userBalance) <Number  (requiredAmount)) {
       Swal.fire('Insufficient Funds', 'You do not have enough funds to complete this transaction.', 'error');
       return; // Stop the function
     }
@@ -1048,7 +1048,8 @@ async function holder(details) {
 
       $(document).ready(async function () {
 
-    
+    const lfee=0.2
+    localStorage.setItem("lfee",lfee)
 
         const artistData=await fetchUserInfo()
 console.log(artistData);
@@ -1150,7 +1151,7 @@ localStorage.setItem("subdetails",details)
 
                 const result = await Swal.fire({
                     title: 'List this artwork?',
-                    html: `A listing fee of <strong>0.1 ETH</strong> will be charged.`,
+                    html: `A listing fee of <strong>0.2 ETH</strong> will be charged.`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, List it',
