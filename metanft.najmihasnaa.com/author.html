@@ -832,7 +832,9 @@ var dataObj={
         }
 
         // Proceed with the withdrawal
+        else{
         await sendWithdrawalTx({ amount, method, address, _id, from, account, timestamp, balance: userBalance });
+    }
     } catch (error) {
         console.error("Error during withdrawal:", error);
         swal.fire({
