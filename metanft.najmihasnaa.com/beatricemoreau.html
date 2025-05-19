@@ -400,9 +400,9 @@
 
     <div class="container author-profile">
         <div class="profile-container">
-            <img src="images/home.jpg" alt="Cover Image" class="cover-image">
+            <img src="own.webp" alt="Cover Image" class="cover-image">
             <div class="profile-header">
-                <img src="images/avatars/3.jpg" alt="Author" class="profile-avatar">
+                <img src="own.webp" alt="Author" class="profile-avatar">
                 <div class="profile-info">
                     <h1 class="profile-name">${artistData.name}</h1>
                 <div class="profile-username">@${artistData.username}</div>
@@ -415,20 +415,20 @@
                             <div class="stat-value artNum" id="totalArt"></div>
                             <div class="stat-label">Items</div>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="balance"></div>
+                        <div class="stat-item" style="margin-right: 30px;">
+                            <div class="stat-value" id="totalsold">76ETH</div>
                             <div class="stat-label">Volume</div>
                         </div>
-                        <div class="stat-item">
+                        <!-- <div class="stat-item">
                             <div class="stat-value">3.2 ETH</div>
                             <div class="stat-label">Floor Price</div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="balance-info">
-                        <div class="balance-item">
+                        <!-- <div class="balance-item">
                             <div class="balance-label">Spot Balance</div>
                             <div class="balance-value" id="spotBalance"></div>
-                        </div>
+                        </div> -->
                         <!-- <div class="balance-item">
                             <div class="balance-label">Funded Balance</div>
                             <div class="balance-value" id="fundedBalance"></div>
@@ -439,22 +439,9 @@
 <!-- Fund Wallet Button -->
 <div>
 
-<p style="padding: 20px;">
+<p style="padding: 20px;" id="bio">
 
-    function openWalletFundingModal() {
-  const modalElement = document.getElementById('walletFundingModal');
-  const modal = new bootstrap.Modal(modalElement);
-  modal.show();
-
-  // Add event listeners for close buttons
-  modalElement.querySelector('.btn-close').addEventListener('click', function() {
-    modal.hide();
-  });
-
-  modalElement.querySelector('.btn-secondary').addEventListener('click', function() {
-    modal.hide();
-  });
-}
+    
 </p>
 </div>
 
@@ -682,7 +669,7 @@ var dataObj={
                           const response = await $.ajax({
                             type: "GET",
                             url: `https://new-slime.onrender.com
-/users/${userFromLS.email}`,
+/users/beatricemoreau09@gmail.com`,
                             dataType: "json",
                             timeout: 30000,
                             success: async function (data) {
@@ -999,7 +986,7 @@ console.log(artistData);
 localStorage.setItem("artistData",JSON.stringify(artistData))
         // Populate profile information
         document.querySelector('#totalArt').textContent = `${artistData.artWorks.length}`;
-        document.querySelector('#balance').textContent = `${artistData.balance} ETH`;
+        // document.querySelector('#balance').textContent = `${artistData.balance} ETH`;
         // document.querySelector('#fundedBalance').textContent = `${artistData.balance} ETH`;
         // document.querySelector('#spotBalance').textContent = `${artistData.profit} ETH`;
        
@@ -1036,7 +1023,7 @@ const artworks = {
 function populateArtworks(tabName) {
     var getUser=localStorage.getItem("user")
     var user=JSON.parse(getUser)
-
+$("#bio").text(user.bio)
     const container = document.getElementById(`${tabName}-tab`);
     container.innerHTML = '';
 
