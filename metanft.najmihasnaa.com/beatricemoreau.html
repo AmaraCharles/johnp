@@ -96,25 +96,47 @@
             z-index: 2;
         }
         @media (max-width: 768px) {
-            .profile-header {
-                justify-content: center;
-                text-align: center;
+            .container.author-profile {
+                padding: 0;
+                max-width: 100%;
+                margin: 0;
+                overflow-x: hidden;
             }
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 20px;
+            .profile-container {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+            .cover-image {
+                border-radius: 0;
+            }
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
             }
             .profile-info {
                 width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                text-align: center;
             }
-            .wallet-address {
-                margin: 0 auto 16px;
+            .profile-stats,
+            .balance-info {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
             }
             .artwork-grid {
                 grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            .blog-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            .tab-buttons {
+                padding: 0 15px;
             }
         }
         .profile-info {
@@ -404,7 +426,7 @@
             <div class="profile-header">
                 <img src="own.webp" alt="Author" class="profile-avatar">
                 <div class="profile-info">
-                    <h1 class="profile-name">${artistData.name}</h1>
+                    <div style="display: flex;"><h1 class="profile-name">${artistData.name}</h1> <img src="./images/verify.png" style="height: 20px; width: 30px;" alt=""></div>
                 <div class="profile-username">@${artistData.username}</div>
                     <!-- <div class="wallet-address" onclick="copyWalletAddress()">
                         <span>0x4bbcd1cd24cd0dcba589cd9349dd595744686a6d</span>
@@ -439,7 +461,7 @@
 <!-- Fund Wallet Button -->
 <div>
 
-<p style="padding: 20px;" id="bio">
+<p  id="bio">
 
     
 </p>
@@ -1137,27 +1159,46 @@ window.switchTab = function (tabName) {
 <style>
 @media (max-width: 768px) {
     .container.author-profile {
-        padding: 20px 10px;
+        padding: 0;
         max-width: 100%;
         margin: 0;
         overflow-x: hidden;
     }
     .profile-container {
-        padding: 15px 10px;
+        padding: 0;
         margin: 0;
+        width: 100%;
+        border-radius: 0;
     }
-    .profile-stats {
-        flex-wrap: wrap;
+    .cover-image {
+        border-radius: 0;
+    }
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+    .profile-info {
+        width: 100%;
+        text-align: center;
+    }
+    .profile-stats,
+    .balance-info {
+        flex-direction: row;
         justify-content: center;
-        gap: 16px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .artwork-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    .blog-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
     }
     .tab-buttons {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .artwork-card {
-        width: 100%;
-        margin: 0 auto;
+        padding: 0 15px;
     }
 }
 </style>

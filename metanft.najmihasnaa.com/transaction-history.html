@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - MetaNFT</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        h2 {
+            font-family: 'Michroma', sans-serif;
+        }
+        .transaction-list {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .transaction-item {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .badge-buy {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Michroma', sans-serif;
+        }
+        .badge-sell {
+            background: #dc3545;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Michroma', sans-serif;
+        }
+        .badge-completed {
+            background: #17a2b8;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Michroma', sans-serif;
+        }
+        .transaction-date {
+            color: #888;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .artwork-name {
+            font-size: 1.2em;
+            color: white;
+            margin: 10px 0;
+            font-family: 'Michroma', sans-serif;
+        }
+        .user-name {
+            color: #888;
+            margin: 10px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price {
+            color: #ffc107;
+            font-weight: bold;
+            font-size: 1.1em;
+            font-family: 'Michroma', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">
+                    <a href="index.html"><img class="img-fluid" src="images/logo.png" alt=""></a>
+                </div>
+                <nav class="main-nav">
+                    <ul class="menu">
+                        <li class="menu-item menu-item-has-children current">
+                            <a href="#0">Home</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="index.html">Home 1</a></li>
+                                <li class="menu-item current-item"><a href="index-3.html">Home 2</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">About</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="about.html">About</a></li>
+                                <li class="menu-item"><a href="team.html">Our Team</a></li>
+                                <li class="menu-item"><a href="faq.html">Faq</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">NFT</a>
+                            <ul class="sub-menu">
+                              <li class="menu-item"><a href="shop.html">Our Shop</a></li>
+                                <li class="menu-item"><a href="collection.html">Collections</a></li>
+                                <li class="menu-item"><a href="upload.html">Create</a></li>
+                               
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <a href="roadmap.html">Road Map</a>
+                        </li>
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#0">Blog</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item"><a href="blog.html">Blog Grid</a></li>
+                                <li class="menu-item"><a href="blog-single.html">Blog Details</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <a href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+                <a class="header-btn" href="register.html">Connect</a>
+            </div>
+        </div>
+    </header>
+<br>
+<br>
+    <!-- Transaction History Section -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-4 text-light" style="color: #fff;">Transaction History</h3>
+        <div class="transaction-list" id="transactionList">
+            <!-- Transactions will be dynamically populated here -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        async function fetchTransactionHistory() {
+            // For demo purposes, using static data
+            const transactions = [
+                {
+                    type: 'buy',
+                    date: '2025-01-15',
+                    artworkName: 'Vuem',
+                    otherParty: 'Beatrimoreau',
+                    price: '2.5'
+                },
+                {
+                    type: 'sell',
+                    date: '2025-02-10',
+                    artworkName: 'Aurora',
+                    otherParty: 'Beatrimoreau',
+                    price: '1.8'
+                },
+                {
+                    type: 'sell',
+                    date: '2025-03-07',
+                    artworkName: 'Cosmic',
+                    otherParty: 'Beatrimoreau',
+                    price: '3.2'
+                },
+                {
+                    type: 'buy',
+                    date: '2025-05-01',
+                    artworkName: 'Soulful',
+                    otherParty: 'Beatrimoreau',
+                    price: '4.0'
+                }
+            ];
+            displayTransactions(transactions);
+        }
+
+        function displayTransactions(transactions) {
+            const transactionList = document.getElementById('transactionList');
+            transactions.forEach(transaction => {
+                const transactionItem = document.createElement('div');
+                transactionItem.className = 'transaction-item';
+                transactionItem.innerHTML = `
+                    <div class="transaction-header">
+                        <span class="badge-${transaction.type === 'buy' ? 'buy' : 'sell'}">
+                            ${transaction.type === 'buy' ? 'Bought' : 'Sold'}
+                        </span>
+                        <span class="transaction-date">${new Date(transaction.date).toLocaleDateString()}</span>
+                    </div>
+                    <div class="artwork-name">${transaction.artworkName}</div>
+                    <div class="user-name">${transaction.type === 'buy' ? 'Seller: ' : 'Buyer: '}${transaction.otherParty}</div>
+                    <div class="price-row">
+                        <span class="price">${transaction.price} ETH</span>
+                        <span class="badge-completed">Completed</span>
+                    </div>
+                `;
+                transactionList.appendChild(transactionItem);
+            });
+        }
+
+        // Load transactions when page loads
+        document.addEventListener('DOMContentLoaded', fetchTransactionHistory);
+    </script>
+</body>
+</html>

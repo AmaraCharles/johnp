@@ -240,7 +240,7 @@
                         <div class="card stat-card animate-fade-in" style="animation-delay: 0.3s">
                             <div class="card-body">
                                 <h5 class="card-title">Total Revenue</h5>
-                                <h2 class="mb-0" id="totalRevenue">$0</h2>
+                                <h2 class="mb-0" id="totalRevenue"></h2>
                                 <!-- <p class="card-text"><small>+20% from last month</small></p> -->
                             </div>
                         </div>
@@ -764,7 +764,7 @@ var dummyName=getRandomUser(dummies)
                 document.getElementById('totalUsers').textContent = data.totalUsers;
                 document.getElementById('totalArtworks').textContent = data.totalArtworks;
                 document.getElementById('soldArtworks').textContent = data.soldArtworks;
-                document.getElementById('totalRevenue').textContent = `ETH${data.totalRevenue}`;
+                document.getElementById('totalRevenue').textContent = `${data.totalRevenue.toFixed(2)} ETH`;
 
                 // Render recent artworks
                 const artworksContainer = document.getElementById('recentArtworks');
@@ -898,7 +898,7 @@ $("#totalArtworks").text(artworkCount);
 $("#soldArtworks").text(soldCount);
 
 
-$("#totalRevenue").text("ETH"+totalRevenue);
+$("#totalRevenue").text(totalRevenue.toFixed(2) +" ETH");
 
 
         });
