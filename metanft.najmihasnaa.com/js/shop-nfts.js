@@ -257,7 +257,7 @@ function renderShopNFTs() {
                             </div>
                             <div class="nft-box-user-name">
                                 <span>Creator</span>
-                                <h4>${nft.creator}</h4>
+                                <h4 onclick="viewCreator('${nft.creator}')">${nft.creator}</h4>
                             </div>
                         </div>
                         <div class="nft-box-price">
@@ -291,3 +291,8 @@ function renderShopNFTs() {
 }
 
 document.addEventListener('DOMContentLoaded', renderShopNFTs);
+
+function viewCreator(creatorName) {
+    localStorage.setItem('selectedCreator', creatorName);
+    window.location.href = 'artist.html';
+}

@@ -323,10 +323,10 @@
                                         <div class="nft-box-user-thumb">
                                             <img class="img-fluid" src="${nft.creatorAvatar}" alt="">
                                         </div>
-                                        <div class="nft-box-user-name">
-                                            <span>Creator</span>
-                                            <h4>${nft.creator}</h4>
-                                        </div>
+                                         <div class="nft-box-user-name">
+                                <span>Creator</span>
+                                <h4 onclick="viewCreator('${nft.creator}')">${nft.creator}</h4>
+                            </div>
                                     </div>
                                     <div class="nft-box-price">
                                         <span>Current Bid</span>
@@ -337,7 +337,10 @@
                         </div>
                     </div>
                 `).join('');
-        
+        function viewCreator(creatorName) {
+    localStorage.setItem('selectedCreator', creatorName);
+    window.location.href = 'artist.html';
+}
                 // Attach click listeners to "Place a bid" buttons
                 document.querySelectorAll('.nft-box-btn').forEach(button => {
                     button.addEventListener('click', () => {
